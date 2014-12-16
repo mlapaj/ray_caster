@@ -11,14 +11,20 @@
 #include <vector>
 using namespace std;
 
-class Map {
+class mapLoader;
+class map {
 public:
+	void PrintMap();
+	int getHeight();
+	int getWidth();
+	virtual ~map();
+	friend class mapLoader;
+private:
 	int height;
 	int width;
+	const int blockSize = 64;
 	vector<vector<int> > MapData;
-	Map(int height,int width,vector<vector<int> > MapData);
-	void PrintMap();
-	virtual ~Map();
+	map(int height,int width,vector<vector<int> > MapData);
 };
 
 #endif /* MAP_H_ */

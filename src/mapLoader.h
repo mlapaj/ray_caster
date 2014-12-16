@@ -10,15 +10,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Map.h"
 #include <vector>
+#include "map.h"
 
 using namespace std;
-class MapLoader {
+class mapLoader {
 public:
-	MapLoader();
-	Map *loadMapFromFile(string fileName);
-	~MapLoader();
+	mapLoader();
+	map *loadMapFromFile(string fileName);
+	~mapLoader();
 };
 
 #endif /* MAPLOADER_H_ */

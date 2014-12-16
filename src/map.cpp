@@ -5,9 +5,9 @@
  *      Author: cod3r
  */
 
-#include "Map.h"
+#include "map.h"
 
-Map::Map(int width,int height,vector<vector<int> > MapData) {
+map::map(int width,int height,vector<vector<int> > MapData) {
 	// TODO Auto-generated constructor stub
 	cout << "Map constructor: " << width << "x" << height << endl;
 	this->width = width;
@@ -15,11 +15,11 @@ Map::Map(int width,int height,vector<vector<int> > MapData) {
 	this->MapData = MapData;
 }
 
-Map::~Map() {
+map::~map() {
 	cout << "Destructing map." << endl;
 }
 
-void Map::PrintMap(){
+void map::PrintMap(){
 	for (int i=0;i<width;i++)
 	{
 		for (int j=0;j<height;j++)
@@ -28,4 +28,13 @@ void Map::PrintMap(){
 		}
 		cout << std::endl;
 	}
+}
+
+
+int map::getHeight(){
+	return height * blockSize;
+}
+
+int map::getWidth(){
+	return width * blockSize;
 }

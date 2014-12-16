@@ -5,18 +5,18 @@
  *      Author: cod3r
  */
 
-#include "MapLoader.h"
+#include "mapLoader.h"
 
 
-MapLoader::MapLoader() {
+mapLoader::mapLoader() {
 	cout << "creating map loader" << endl;
 }
 
-MapLoader::~MapLoader() {
+mapLoader::~mapLoader() {
 	cout << "destructing map loader" << endl;
 }
 
-Map *MapLoader::loadMapFromFile(string fileName){
+map *mapLoader::loadMapFromFile(string fileName){
 	int height;
 	int width;
 
@@ -26,16 +26,16 @@ Map *MapLoader::loadMapFromFile(string fileName){
 	if (mapa.is_open()){
 		mapa >> height;
 		mapa >> width;
-		vector<vector<int> > map(height, std::vector<int>(width));
+		vector<vector<int> > mapData(height, std::vector<int>(width));
 		for (int i=0;i<width;i++)
 		{
 			for (int j=0;j<height;j++)
 			{
-				mapa >> map[i][j];
+				mapa >> mapData[i][j];
 			}
 		}
 		mapa.close();
-		Map *oMap = new Map(width,height,map);
+		map *oMap = new map(width,height,mapData);
 		return oMap;
 	}
 	else
