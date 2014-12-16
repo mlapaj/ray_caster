@@ -9,6 +9,7 @@
 #define MAP_H_
 #include <iostream>
 #include <vector>
+#include "objectPositon.h"
 using namespace std;
 
 class mapLoader;
@@ -17,14 +18,18 @@ public:
 	void PrintMap();
 	int getHeight();
 	int getWidth();
+	objectPosition getDefaultPlayerPos();
 	virtual ~map();
 	friend class mapLoader;
+	void castRay(objectPosition pos);
 private:
 	int height;
 	int width;
 	const int blockSize = 64;
+	struct objectPosition defaultPlayerPos;
 	vector<vector<int> > MapData;
-	map(int height,int width,vector<vector<int> > MapData);
+	map(int height,int width,objectPosition pos,vector<vector<int> > MapData);
+
 };
 
 #endif /* MAP_H_ */

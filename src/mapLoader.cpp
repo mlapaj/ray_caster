@@ -6,6 +6,7 @@
  */
 
 #include "mapLoader.h"
+#include "objectPositon.h"
 
 
 mapLoader::mapLoader() {
@@ -19,13 +20,21 @@ mapLoader::~mapLoader() {
 map *mapLoader::loadMapFromFile(string fileName){
 	int height;
 	int width;
-
+	int player_x, player_y,player_angle;
 	cout << "Loading map. Filename: " << fileName << endl;
 	ifstream mapa;
 	mapa.open(fileName.c_str());
 	if (mapa.is_open()){
 		mapa >> height;
 		mapa >> width;
+		objectPosition playerPos;
+		mapa >> player_x;
+		mapa >> player_y;
+		mapa >> player_angle;
+		playerPos.x = player_x;
+		playerPos.y = player_y;
+		playerPos.angle = player_angle;
+
 		vector<vector<int> > mapData(height, std::vector<int>(width));
 		for (int i=0;i<width;i++)
 		{
@@ -35,7 +44,7 @@ map *mapLoader::loadMapFromFile(string fileName){
 			}
 		}
 		mapa.close();
-		map *oMap = new map(width,height,mapData);
+		map *oMap = new map(width,height,playerPos,mapData);
 		return oMap;
 	}
 	else
