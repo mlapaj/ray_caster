@@ -21,7 +21,7 @@ public:
 	objectPosition getDefaultPlayerPos();
 	virtual ~map();
 	friend class mapLoader;
-	void castRay(objectPosition pos);
+	objectPosition castRay(objectPosition pos);
 private:
 	int height;
 	int width;

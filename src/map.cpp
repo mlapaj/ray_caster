@@ -53,24 +53,27 @@ objectPosition map::getDefaultPlayerPos()
 }
 
 
-void map::castRay(objectPosition pos)
+objectPosition map::castRay(objectPosition pos)
 {
-	int angleDeg =  89;
-
-	if ((angleDeg> -90) && (angleDeg < 90))
+	int angleDeg =  pos.angle;
+	long deltaYa;
+	long deltaXa;
+	if ((angleDeg >= -90) && (angleDeg <= 90))
 	{
-		int deltaYa = pos.y - int(pos.y - pos.y % blockSize);
-
-        int deltaXa = deltaYa * tan(deg2rad(angleDeg));
-		cout << "deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
+		deltaYa = - (pos.y - int(pos.y - pos.y % blockSize));
+        deltaXa = - (deltaYa * tan(deg2rad(angleDeg)));
+		cout << "1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 
 	}
 	else
 	{
 
-		int deltaYa = -(pos.y - int(pos.y - pos.y % blockSize));
-		int deltaXa = (deltaYa * tan(deg2rad(angleDeg)));
-		cout << "deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
+		deltaYa = (pos.y - int(pos.y - pos.y % blockSize));
+		deltaXa = -(deltaYa * tan(deg2rad(angleDeg)));
+		cout << "2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 	}
+	pos.x = pos.x + deltaXa;
+	pos.y = pos.y + deltaYa;
+	return pos;
 }
 

@@ -9,14 +9,18 @@
 #define RENDERENGINE_H_
 #include <memory>
 #include "map.h"
+#include <SDL.h>
 
 class renderEngine {
 public:
 	renderEngine(int resX,int resY,int fov,shared_ptr<map> rMap);
+	void drawFrame();
 	virtual ~renderEngine();
 private:
 	int resX;
 	int resY;
+	SDL_Window* window = NULL;
+	SDL_Renderer *render;
 	int dToProjectionPlane;
 
 	double fov; // in radians
