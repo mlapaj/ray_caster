@@ -38,15 +38,47 @@ int main() {
 
 	 while ((!quit) && SDL_WaitEvent(&e))
 		{
-		 oRenderEngine.drawFrame();
-		 if (e.type == SDL_QUIT){
-			 quit = true;
-		 }
-		 if (e.type == SDL_KEYDOWN)
-		 {
-			 quit = true;
-		 }
+			 oRenderEngine.drawFrame();
+			 if (e.type == SDL_QUIT){
+				 quit = true;
+			 }
+			 if (e.type == SDL_KEYDOWN)
+			 {
+				 switch (e.key.keysym.sym)
+				 {
+					 case SDLK_q:
+					 {
+						 quit = true;
+						 break;
+					 }
 
+					 case SDLK_o:
+					 {
+						 oRenderEngine.debugAngle += 0.1;
+
+						 break;
+					 }
+
+					 case SDLK_p:
+					 {
+						 oRenderEngine.debugAngle -= 0.1;
+
+						 break;
+					 }
+					 case SDLK_k:
+					 {
+						 oRenderEngine.debugRow+=1;
+						 break;
+					 }
+					 case SDLK_l:
+					 {
+						 oRenderEngine.debugRow-=1;
+						 break;
+					 }
+
+				 }
+
+			}
 		}
 
 	//Quit SDL subsystems

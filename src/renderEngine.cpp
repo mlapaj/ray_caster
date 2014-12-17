@@ -33,6 +33,7 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 	this->resX = resX;
 	this->resY = resY;
 	this->fov = fov * M_PI / 180.0 ;
+	this->halfFov = this->fov / 2;
 	this->angleBetweenRays =  (this->resX / fov) * M_PI / 180.0;
 	dToProjectionPlane = (resX/2)  / tan(this->fov/2);
 	cout << "screen resolution: " << resX << "x" << resY << endl;
@@ -45,24 +46,26 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 void renderEngine::drawFrame(){
 	SDL_RenderClear(render);
 	objectPosition pos;
-	pos.x = 260;
+	pos.x = 230;
 	pos.y = 224;
 
-	for (int i=0;i<90;i++)
+
+
+	for (double i=debugAngle;i<debugAngle+halfFov;i+=0.1)
 	{
 		pos.angle = i;
-		objectPosition posOut = castRayVeritically(pos);
+		objectPosition posOut = castRayHorizontally(pos);
 
 		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
 	}
-/*
-	for (int i=0;i>-180;i--)
+
+
+	for (double i=debugAngle;i>debugAngle-halfFov;i-=0.1)
 	{
 		pos.angle = i;
 		objectPosition posOut = castRayHorizontally(pos);
 		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
 	}
-*/
 
 	SDL_RenderPresent(render);
 }
@@ -76,41 +79,44 @@ renderEngine::~renderEngine() {
 // its ok
 objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 {
-	int angleDeg =  pos.angle;
+	// we should normalize angle here
+
+	double angle =  pos.angle;
+	if (angle=> 2*M_M_PI) || (angle<= -2*M_PI) angle = 0;
 	long deltaYa;
 	long deltaXa;
-	if ((angleDeg >= -90) && (angleDeg <= 90))
+	// first coordinates
+	if ((angle >= -M_PI/2) && (angle <= M_PI/2))
 	{
-		deltaYa = - (pos.y - int(pos.y - pos.y % mapBlockSize));
-        deltaXa = - (deltaYa * tan(deg2rad(angleDeg)));
-		cout << "1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-
+		deltaYa = - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
+        deltaXa = - (deltaYa * tan(angle));
+		//cout << "1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 	}
 	else
 	{
-
-		deltaYa = (pos.y - int(pos.y - pos.y % mapBlockSize));
-		deltaXa = -(deltaYa * tan(deg2rad(angleDeg)));
-		cout << "2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
+		deltaYa = -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
+		deltaXa = -(deltaYa * tan(angle));
+		//cout << "2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 	}
 
-
+	// adding constant value - can be precalculated earlier
 	pos.x = pos.x + deltaXa;
 	pos.y = pos.y + deltaYa;
 
-    // first coordinates
-	if ((angleDeg >= -90) && (angleDeg <= 90))
+	if ((angle >= -M_PI/2) && (angle <= M_PI/2))
 	{
-		deltaXa = -(mapBlockSize / tan(deg2rad(angleDeg)));
 		deltaYa = -(mapBlockSize);
+		deltaXa = -(deltaYa * tan(angle));
+
 	}
 	else
 	{
-		deltaXa = mapBlockSize / tan(deg2rad(angleDeg));
 		deltaYa = mapBlockSize;
+		deltaXa = -(deltaYa * tan(angle));
+		//cout << "4 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 	}
 
-	for (int i=0;i<3;i++)
+	for (int i=0;i<debugRow;i++)
 	{
 	pos.x = pos.x + deltaXa;
 	pos.y = pos.y + deltaYa;
@@ -123,22 +129,27 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 // its not ok
 objectPosition renderEngine::castRayVeritically(objectPosition pos)
 {
-	int angleDeg =  pos.angle;
+	// we should normalize angle
+	double angle =  pos.angle;
 	long deltaYa;
 	long deltaXa;
 	// first coordinates
-	if ((angleDeg >= 0) && (angleDeg <= 180))
+	if ((angle > 0) && (angle < M_PI))
 	{
-		deltaXa = - (pos.x - int(pos.x - pos.x % mapBlockSize));
-		cout << "!!" << int(pos.x) <<endl;
-        deltaYa = - (deltaXa / tan(deg2rad(angleDeg)));
+		deltaXa = 0;
+		deltaYa = 0;
+		deltaXa = - (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
+        deltaYa = (deltaXa / tan(angle));
+
 		cout << "ver 1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 
 	}
 	else
 	{
-		deltaXa = - (pos.x - int(pos.x - pos.x % mapBlockSize));
-		deltaYa = (deltaXa / tan(deg2rad(angleDeg)));
+		deltaXa = 0;
+		deltaYa = 0;
+		deltaXa = -(pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
+		deltaYa = (deltaXa / tan(angle));
 		cout << "ver 2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
 		// to fill
 	}

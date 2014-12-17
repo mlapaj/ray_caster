@@ -13,6 +13,8 @@
 
 class renderEngine {
 public:
+	double debugAngle = 0;
+	int debugRow = 1;
 	renderEngine(int resX,int resY,int fov,shared_ptr<map> rMap);
 	void drawFrame();
 	virtual ~renderEngine();
@@ -25,6 +27,7 @@ private:
 	int dToProjectionPlane;
 
 	double fov; // in radians
+	double halfFov;
 	double angleBetweenRays; // in radians
 	shared_ptr<map> &oMap;
 	objectPosition castRayHorizontally(objectPosition pos);
