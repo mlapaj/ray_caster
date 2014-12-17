@@ -17,6 +17,7 @@ public:
 	void drawFrame();
 	virtual ~renderEngine();
 private:
+	int mapBlockSize;
 	int resX;
 	int resY;
 	SDL_Window* window = NULL;
@@ -26,6 +27,8 @@ private:
 	double fov; // in radians
 	double angleBetweenRays; // in radians
 	shared_ptr<map> &oMap;
+	objectPosition castRayHorizontally(objectPosition pos);
+	objectPosition castRayVeritically(objectPosition pos);
 };
 
 #endif /* RENDERENGINE_H_ */

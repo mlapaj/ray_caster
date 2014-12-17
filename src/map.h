@@ -19,9 +19,9 @@ public:
 	int getHeight();
 	int getWidth();
 	objectPosition getDefaultPlayerPos();
+	int getMapBlockSize();
 	virtual ~map();
 	friend class mapLoader;
-	objectPosition castRay(objectPosition pos);
 private:
 	int height;
 	int width;

@@ -27,8 +27,6 @@ int main() {
 	shared_ptr<map> pMap(oMapLoader.loadMapFromFile("level1.map"));
 
 	pMap->PrintMap();
-	objectPosition pos = pMap->getDefaultPlayerPos();
-	pMap->castRay(pos);
 	cout << pMap->getWidth() << "x" << pMap->getHeight() << endl;
 	cout << "default player pos: X:" << pMap->getDefaultPlayerPos().x << " Y:" << pMap->getDefaultPlayerPos().y << endl;
 

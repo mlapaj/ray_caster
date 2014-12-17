@@ -7,7 +7,7 @@
 
 #include "map.h"
 #include <cmath>
-#define deg2rad(x) ((x) * M_PI / 180.0)
+
 
 map::map(int width,int height,objectPosition pos,vector<vector<int> > MapData) {
 	// TODO Auto-generated constructor stub
@@ -53,27 +53,8 @@ objectPosition map::getDefaultPlayerPos()
 }
 
 
-objectPosition map::castRay(objectPosition pos)
+int map::getMapBlockSize()
 {
-	int angleDeg =  pos.angle;
-	long deltaYa;
-	long deltaXa;
-	if ((angleDeg >= -90) && (angleDeg <= 90))
-	{
-		deltaYa = - (pos.y - int(pos.y - pos.y % blockSize));
-        deltaXa = - (deltaYa * tan(deg2rad(angleDeg)));
-		cout << "1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-
-	}
-	else
-	{
-
-		deltaYa = (pos.y - int(pos.y - pos.y % blockSize));
-		deltaXa = -(deltaYa * tan(deg2rad(angleDeg)));
-		cout << "2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-	}
-	pos.x = pos.x + deltaXa;
-	pos.y = pos.y + deltaYa;
-	return pos;
+	return blockSize;
 }
 
