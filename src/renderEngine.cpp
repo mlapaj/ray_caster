@@ -70,7 +70,7 @@ void renderEngine::drawFrame(){
 		//posOut = castRayHorizontally(pos);
 		//SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
 		posOut = castRayVeritically(pos);
-		//SDL_SetRenderDrawColor(render,255,0,0,0);
+
 		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
 	}
 

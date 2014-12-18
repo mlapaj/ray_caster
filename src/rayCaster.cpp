@@ -74,11 +74,13 @@ int main() {
 					 case SDLK_k:
 					 {
 						 oRenderEngine.debugRow+=1;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
 					 case SDLK_l:
 					 {
 						 oRenderEngine.debugRow-=1;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
 
