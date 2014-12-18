@@ -58,3 +58,15 @@ int map::getMapBlockSize()
 	return blockSize;
 }
 
+
+bool map::isWallOnPosition(int x,int y)
+{
+	int cordX = x/blockSize;
+	int cordY = y/blockSize;
+	if ((cordX<0) || (cordX>=width)) return true;
+	if ((cordY<0) || (cordY>=height)) return true;
+	if (MapData[cordX][cordY] > 0){
+		return true;
+	}
+	return false;
+}

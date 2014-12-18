@@ -54,16 +54,23 @@ void renderEngine::drawFrame(){
 	for (double i=debugAngle;i<debugAngle+halfFov;i+=0.1)
 	{
 		pos.angle = i;
-		objectPosition posOut = castRayHorizontally(pos);
-
+		objectPosition posOut;
+		posOut = castRayHorizontally(pos);
+		//SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
+		posOut = castRayVeritically(pos);
 		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
+
 	}
 
 
 	for (double i=debugAngle;i>debugAngle-halfFov;i-=0.1)
 	{
 		pos.angle = i;
-		objectPosition posOut = castRayHorizontally(pos);
+		objectPosition posOut;
+		//posOut = castRayHorizontally(pos);
+		//SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
+		posOut = castRayVeritically(pos);
+		//SDL_SetRenderDrawColor(render,255,0,0,0);
 		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
 	}
 
@@ -109,11 +116,11 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 		{
 			if (0==i)
 			{
-				deltaYa = - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
+				deltaYa += - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
 			}
 			else
 			{
-				deltaYa = -mapBlockSize;
+				deltaYa += -mapBlockSize;
 			}
 			deltaXa = - (deltaYa * tanAngle);
 		}
@@ -121,19 +128,23 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 		{
 			if (0==i)
 			{
-				deltaYa = -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
+				deltaYa += -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
 			}
 			else
 			{
-				deltaYa = mapBlockSize;
+				deltaYa += mapBlockSize;
 			}
 			deltaXa = -(deltaYa * tan(angle));
 		}
 
-		pos.x = pos.x + deltaXa;
-		pos.y = pos.y + deltaYa;
+		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
+		{
+			break;
+		}
 	}
 
+	pos.x = pos.x + deltaXa;
+	pos.y = pos.y + deltaYa;
 	return pos;
 }
 
@@ -165,12 +176,13 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 			{
 				if (0 == i)
 				{
-					deltaXa = (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
+					deltaXa += (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
 				}
 				else
 				{
-					deltaXa = mapBlockSize;
+					deltaXa += mapBlockSize;
 				}
+
 				deltaYa = -(deltaXa / tanAngle);
 				if (deltaYa < -1000000){
 					deltaYa = -1000000;
@@ -180,22 +192,24 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 			{
 				if (0 == i)
 				{
-					deltaXa = (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
+					deltaXa += (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
 				}
 				else
 				{
-					deltaXa = -mapBlockSize;
+					deltaXa += -mapBlockSize;
 				}
 				deltaYa = -(deltaXa / tanAngle);
+
 				if (deltaYa < -1000000)
 				{
 					deltaYa = -1000000;
 				}
+
 			}
 
-			pos.x = pos.x + deltaXa;
-			pos.y = pos.y + deltaYa;
 		}
+		pos.x = pos.x + deltaXa;
+		pos.y = pos.y + deltaYa;
 
 	return pos;
 }

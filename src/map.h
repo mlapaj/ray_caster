@@ -19,6 +19,7 @@ public:
 	int getHeight();
 	int getWidth();
 	objectPosition getDefaultPlayerPos();
+	bool isWallOnPosition(int x,int y);
 	int getMapBlockSize();
 	virtual ~map();
 	friend class mapLoader;
