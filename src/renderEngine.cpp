@@ -80,46 +80,58 @@ renderEngine::~renderEngine() {
 objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 {
 	// we should normalize angle here
-
 	double angle =  pos.angle;
-	if (angle=> 2*M_M_PI) || (angle<= -2*M_PI) angle = 0;
-	long deltaYa;
-	long deltaXa;
+    double tanAngle = tan(angle);
+	long deltaYa = 0;
+	long deltaXa = 0;
 	// first coordinates
-	if ((angle >= -M_PI/2) && (angle <= M_PI/2))
-	{
-		deltaYa = - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
-        deltaXa = - (deltaYa * tan(angle));
-		//cout << "1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-	}
-	else
-	{
-		deltaYa = -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
-		deltaXa = -(deltaYa * tan(angle));
-		//cout << "2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
+	if (angle > 2*M_PI){
+		angle -= 2*M_PI;
 	}
 
-	// adding constant value - can be precalculated earlier
-	pos.x = pos.x + deltaXa;
-	pos.y = pos.y + deltaYa;
-
-	if ((angle >= -M_PI/2) && (angle <= M_PI/2))
-	{
-		deltaYa = -(mapBlockSize);
-		deltaXa = -(deltaYa * tan(angle));
-
+	if (angle < 2*-M_PI){
+		angle += 2*M_PI;
 	}
-	else
+
+	if ((angle <= 3*-M_PI_2) && (angle >= 2*-M_PI)) // -270 to -360
 	{
-		deltaYa = mapBlockSize;
-		deltaXa = -(deltaYa * tan(angle));
-		//cout << "4 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
+		angle = angle + 4*M_PI_2;
+	}
+	else if ((angle >= 3*M_PI_2) && (angle<= 2*M_PI)) // 270 to 360
+	{
+		angle = angle - 2*M_PI;
 	}
 
 	for (int i=0;i<debugRow;i++)
 	{
-	pos.x = pos.x + deltaXa;
-	pos.y = pos.y + deltaYa;
+		if ((angle >= -M_PI/2) && (angle <= M_PI/2)) // -90 to 90
+
+		{
+			if (0==i)
+			{
+				deltaYa = - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
+			}
+			else
+			{
+				deltaYa = -mapBlockSize;
+			}
+			deltaXa = - (deltaYa * tanAngle);
+		}
+		else
+		{
+			if (0==i)
+			{
+				deltaYa = -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
+			}
+			else
+			{
+				deltaYa = mapBlockSize;
+			}
+			deltaXa = -(deltaYa * tan(angle));
+		}
+
+		pos.x = pos.x + deltaXa;
+		pos.y = pos.y + deltaYa;
 	}
 
 	return pos;
@@ -131,33 +143,59 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 {
 	// we should normalize angle
 	double angle =  pos.angle;
-	long deltaYa;
-	long deltaXa;
+    double tanAngle = tan(angle);
+	cout << "angle:" << angle << endl;
 	// first coordinates
-	if ((angle > 0) && (angle < M_PI))
-	{
-		deltaXa = 0;
-		deltaYa = 0;
-		deltaXa = - (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
-        deltaYa = (deltaXa / tan(angle));
-
-		cout << "ver 1 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-
-	}
-	else
-	{
-		deltaXa = 0;
-		deltaYa = 0;
-		deltaXa = -(pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
-		deltaYa = (deltaXa / tan(angle));
-		cout << "ver 2 deltaXa: " << deltaXa << " deltaYa: " << deltaYa << endl;
-		// to fill
+	if (angle >= 2*M_PI){
+		angle -= 2*M_PI;
 	}
 
+	if (angle <= 2*-M_PI){
+		angle += 2*M_PI;
+	}
 
-	pos.x = pos.x + deltaXa;
-	pos.y = pos.y + deltaYa;
+	long deltaYa = 0;
+	long deltaXa = 0;
+	// first coordinates
+	for (int i=0;i<debugRow;i++)
+		{
 
+			if (((angle > 0) && (angle < M_PI)) || // 0 to 180
+				((angle < -M_PI) && (angle > 2*-M_PI))) // -180 to -360
+			{
+				if (0 == i)
+				{
+					deltaXa = (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
+				}
+				else
+				{
+					deltaXa = mapBlockSize;
+				}
+				deltaYa = -(deltaXa / tanAngle);
+				if (deltaYa < -1000000){
+					deltaYa = -1000000;
+				}
+			}
+			else
+			{
+				if (0 == i)
+				{
+					deltaXa = (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
+				}
+				else
+				{
+					deltaXa = -mapBlockSize;
+				}
+				deltaYa = -(deltaXa / tanAngle);
+				if (deltaYa < -1000000)
+				{
+					deltaYa = -1000000;
+				}
+			}
+
+			pos.x = pos.x + deltaXa;
+			pos.y = pos.y + deltaYa;
+		}
 
 	return pos;
 }

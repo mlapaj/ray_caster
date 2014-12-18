@@ -55,14 +55,20 @@ int main() {
 					 case SDLK_o:
 					 {
 						 oRenderEngine.debugAngle += 0.1;
-
+						 if (oRenderEngine.debugAngle >= 2 * M_PI){
+							 oRenderEngine.debugAngle = 0;
+						 }
+						 cout << oRenderEngine.debugAngle << endl;
 						 break;
 					 }
 
 					 case SDLK_p:
 					 {
 						 oRenderEngine.debugAngle -= 0.1;
-
+						 if (oRenderEngine.debugAngle <= -2 * M_PI){
+							 oRenderEngine.debugAngle = 0;
+						 }
+						 cout << oRenderEngine.debugAngle << endl;
 						 break;
 					 }
 					 case SDLK_k:
