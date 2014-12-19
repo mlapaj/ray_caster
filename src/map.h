@@ -19,13 +19,17 @@ public:
 	int getHeight();
 	int getWidth();
 	objectPosition getDefaultPlayerPos();
-	bool isWallOnPosition(int x,int y);
+	bool isWallOnPosition(long x,long y);
 	int getMapBlockSize();
 	virtual ~map();
 	friend class mapLoader;
 private:
+	int heightInBlocks;
+	int widthInBlocks;
+
 	int height;
 	int width;
+
 	const int blockSize = 64;
 	struct objectPosition defaultPlayerPos;
 	vector<vector<int> > MapData;

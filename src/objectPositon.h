@@ -12,6 +12,7 @@ struct objectPosition{
 	int x;
 	int y;
 	double angle;
+	long distance;
 };
 
 

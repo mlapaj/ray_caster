@@ -34,7 +34,7 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 	this->resY = resY;
 	this->fov = fov * M_PI / 180.0 ;
 	this->halfFov = this->fov / 2;
-	this->angleBetweenRays =  (this->resX / fov) * M_PI / 180.0;
+	this->angleBetweenRays =  (fov / (double)this->resX)  * M_PI / 180.0;
 	dToProjectionPlane = (resX/2)  / tan(this->fov/2);
 	cout << "screen resolution: " << resX << "x" << resY << endl;
 	cout << "distance to proj plane: " << dToProjectionPlane << endl;
@@ -44,35 +44,41 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 }
 
 void renderEngine::drawFrame(){
+	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	objectPosition pos;
-	pos.x = 230;
-	pos.y = 224;
+	pos.x = 256;
+	pos.y = 256;
 
-
-
-	for (double i=debugAngle;i<debugAngle+halfFov;i+=0.1)
+    double i = 0;
+	int z = 0;
+	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
 	{
+		z++;
 		pos.angle = i;
-		objectPosition posOut;
-		posOut = castRayHorizontally(pos);
-		//SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
-		posOut = castRayVeritically(pos);
-		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
+		objectPosition posOutH;
+		objectPosition posOutV;
+
+		posOutH = castRayHorizontally(pos);
+		posOutV = castRayVeritically(pos);
+
+		//cout << "H: "<<posOutH.distance << "V:" << posOutV.distance << endl;
+		if (posOutH.distance < posOutV.distance)
+		{
+			SDL_SetRenderDrawColor(render,0,255,0,0);
+			SDL_RenderDrawLine(render,pos.x,pos.y,posOutH.x,posOutH.y);
+		}
+		else
+		{
+
+			SDL_SetRenderDrawColor(render,255,0,0,0);
+			SDL_RenderDrawLine(render,pos.x,pos.y,posOutV.x,posOutV.y);
+		}
+		//SDL_SetRenderDrawColor(render,0,255,0,0);
+		//SDL_RenderDrawLine(render,pos.x,pos.y,posOutH.x,posOutH.y);
 
 	}
 
-
-	for (double i=debugAngle;i>debugAngle-halfFov;i-=0.1)
-	{
-		pos.angle = i;
-		objectPosition posOut;
-		//posOut = castRayHorizontally(pos);
-		//SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
-		posOut = castRayVeritically(pos);
-
-		SDL_RenderDrawLine(render,pos.x,pos.y,posOut.x,posOut.y);
-	}
 
 	SDL_RenderPresent(render);
 }
@@ -111,12 +117,13 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 
 	for (int i=0;i<debugRow;i++)
 	{
+
 		if ((angle >= -M_PI/2) && (angle <= M_PI/2)) // -90 to 90
 
 		{
 			if (0==i)
 			{
-				deltaYa += - (pos.y - (pos.y / mapBlockSize) * mapBlockSize);
+				deltaYa += - (pos.y - (pos.y / mapBlockSize) * mapBlockSize) -1;
 			}
 			else
 			{
@@ -128,7 +135,7 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 		{
 			if (0==i)
 			{
-				deltaYa += -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize);
+				deltaYa += -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize) +1;
 			}
 			else
 			{
@@ -136,13 +143,14 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 			}
 			deltaXa = -(deltaYa * tan(angle));
 		}
-
+		//cout << pos.x + deltaXa << endl;
 		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
 		{
 			break;
 		}
-	}
 
+	}
+	pos.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
 	pos.x = pos.x + deltaXa;
 	pos.y = pos.y + deltaYa;
 	return pos;
@@ -155,7 +163,6 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 	// we should normalize angle
 	double angle =  pos.angle;
     double tanAngle = tan(angle);
-	cout << "angle:" << angle << endl;
 	// first coordinates
 	if (angle >= 2*M_PI){
 		angle -= 2*M_PI;
@@ -167,16 +174,21 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 
 	long deltaYa = 0;
 	long deltaXa = 0;
+	long oldDeltaXa = 0;
+	long oldDeltaYa = 0;
+	bool wallFoun = false;
 	// first coordinates
 	for (int i=0;i<debugRow;i++)
 		{
+			oldDeltaXa = deltaXa;
+			oldDeltaYa = deltaYa;
 
 			if (((angle > 0) && (angle < M_PI)) || // 0 to 180
 				((angle < -M_PI) && (angle > 2*-M_PI))) // -180 to -360
 			{
 				if (0 == i)
 				{
-					deltaXa += (pos.x - int(pos.x / mapBlockSize) * mapBlockSize);
+					deltaXa += (pos.x - int(pos.x / mapBlockSize) * mapBlockSize) +1;
 				}
 				else
 				{
@@ -192,12 +204,12 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 			{
 				if (0 == i)
 				{
-					deltaXa += (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize);
+					deltaXa += (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize) -1;
 				}
 				else
 				{
 					deltaXa += -mapBlockSize;
-				}
+				};
 				deltaYa = -(deltaXa / tanAngle);
 
 				if (deltaYa < -1000000)
@@ -207,7 +219,13 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 
 			}
 
+			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
+			{
+				bool wallFound = true;
+				break;
+			}
 		}
+	    pos.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
 		pos.x = pos.x + deltaXa;
 		pos.y = pos.y + deltaYa;
 

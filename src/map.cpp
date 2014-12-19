@@ -16,8 +16,10 @@ map::map(int width,int height,objectPosition pos,vector<vector<int> > MapData) {
 	defaultPlayerPos.x = (defaultPlayerPos.x * blockSize) + blockSize/2;
 	defaultPlayerPos.y = (defaultPlayerPos.y * blockSize) + blockSize/2;
 
-	this->width = width;
-	this->height = height;
+	this->widthInBlocks = width;
+	this->heightInBlocks = height;
+	this->width = width * blockSize;
+	this->height = height * blockSize;
 	this->MapData = MapData;
 
 }
@@ -27,9 +29,9 @@ map::~map() {
 }
 
 void map::PrintMap(){
-	for (int i=0;i<width;i++)
+	for (int i=0;i<heightInBlocks;i++)
 	{
-		for (int j=0;j<height;j++)
+		for (int j=0;j<widthInBlocks;j++)
 		{
 			cout << MapData[i][j] << " ";
 		}
@@ -39,11 +41,11 @@ void map::PrintMap(){
 
 
 int map::getHeight(){
-	return height * blockSize;
+	return heightInBlocks * blockSize;
 }
 
 int map::getWidth(){
-	return width * blockSize;
+	return heightInBlocks * blockSize;
 }
 
 
@@ -59,14 +61,26 @@ int map::getMapBlockSize()
 }
 
 
-bool map::isWallOnPosition(int x,int y)
+bool map::isWallOnPosition(long x,long y)
 {
-	int cordX = x/blockSize;
-	int cordY = y/blockSize;
-	if ((cordX<0) || (cordX>=width)) return true;
-	if ((cordY<0) || (cordY>=height)) return true;
-	if (MapData[cordX][cordY] > 0){
-		return true;
+	bool retVal = false;
+	long cordX = x/blockSize;
+	long cordY = y/blockSize;
+	try{
+	if ((cordX<0) || (cordX>=widthInBlocks)){ retVal = true;}
+	else if ((cordY<0) || (cordY>=heightInBlocks)){ retVal = true;}
+	else if (MapData[cordX][cordY] != 0){
+		retVal = true;
 	}
-	return false;
+	if (retVal == true)
+	{
+		cout << "x: " << x << "y: " << y << "cordX: " <<  cordX << " cordY: " << cordY << " Data: " << ":"  << retVal << endl;
+	}
+	}
+	catch (...)
+	{
+		cout << "error";
+	}
+
+	return retVal;
 }
