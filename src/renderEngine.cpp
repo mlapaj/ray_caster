@@ -43,7 +43,10 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 	mapBlockSize = rMap->getMapBlockSize();
 }
 
+
 void renderEngine::drawFrame(){
+	//debugPlane();
+	//return;
 	// to fix
 	if ((oMap->getWidth()) / oMap->getMapBlockSize() > (oMap->getHeight() / oMap->getMapBlockSize()))
 	{
@@ -56,15 +59,17 @@ void renderEngine::drawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	objectPosition pos;
-	pos.x = debugPlayerPositionX;
-	pos.y = debugPlayerPositionY;
+	pos.x = debugPlayerPositionX + diffX;
+	pos.y = debugPlayerPositionY + diffY;
 
 	double i = debugAngle;
 	objectPosition posOutH;
 	objectPosition posOutV;
 	objectPosition *posCloser;
+	int z=0;
 	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
 	{
+		z++;
 		pos.angle = i;
 
 
@@ -83,14 +88,53 @@ void renderEngine::drawFrame(){
 			posCloser = &posOutV;
 		}
         // slice height = actual slice height / distance to slice * distance to projection plane
-		double sliceHeight = (oMap->getMapBlockSize() / (double) posCloser->distance) * dToProjectionPlane;
-		cout << "sluiceHeight:" << sliceHeight << endl;
 
-		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
+		double distanceToSlice = 0;
+
+		distanceToSlice = (double)posCloser->distance * cos(i-debugAngle);
+
+		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
+		cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
+
+		drawSlice(z,sliceHeight);
 	}
+	cout << "Z is:" << z <<endl;
+
 	SDL_RenderPresent(render);
 }
 
+void renderEngine::drawSlice(int which,int height){
+
+	int center = resY / 2;
+	SDL_RenderDrawLine(render,which,center-height,which,center+height);
+}
+
+
+void renderEngine::debugForward(){
+	toDiffX= sin(debugAngle);
+	toDiffY= -cos(debugAngle);
+	diffX += toDiffX *3;
+	diffY += toDiffY *3;
+}
+
+void renderEngine::debugBackward(){
+	toDiffX= sin(debugAngle);
+	toDiffY= -cos(debugAngle);
+	diffX -= toDiffX * 3;
+	diffY -= toDiffY * 3;
+}
+
+
+
+void renderEngine::debugPlane()
+{
+	SDL_SetRenderDrawColor(render,0,0,0,0);
+	SDL_RenderClear(render);
+	SDL_SetRenderDrawColor(render,255,0,0,0);
+	SDL_RenderDrawPoint(render,100+diffX*3,100+diffY*3);
+
+	SDL_RenderPresent(render);
+}
 
 void renderEngine::debugDrawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);

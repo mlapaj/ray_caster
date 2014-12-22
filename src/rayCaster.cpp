@@ -52,25 +52,6 @@ int main() {
 						 break;
 					 }
 
-					 case SDLK_o:
-					 {
-						 oRenderEngine.debugAngle += 0.1;
-						 if (oRenderEngine.debugAngle >= 2 * M_PI){
-							 oRenderEngine.debugAngle = 0;
-						 }
-						 cout << oRenderEngine.debugAngle << endl;
-						 break;
-					 }
-
-					 case SDLK_p:
-					 {
-						 oRenderEngine.debugAngle -= 0.1;
-						 if (oRenderEngine.debugAngle <= -2 * M_PI){
-							 oRenderEngine.debugAngle = 0;
-						 }
-						 cout << oRenderEngine.debugAngle << endl;
-						 break;
-					 }
 					 case SDLK_k:
 					 {
 						 oRenderEngine.debugRow+=1;
@@ -83,7 +64,7 @@ int main() {
 						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
-
+/*
 					 case SDLK_UP:
 					 {
 						 oRenderEngine.debugPlayerPositionY--;
@@ -96,6 +77,38 @@ int main() {
 						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
+*/
+					 case SDLK_UP:
+					 {
+						 oRenderEngine.debugForward();
+						 break;
+					 }
+					 case SDLK_DOWN:
+					 {
+						 oRenderEngine.debugBackward();
+						 break;
+					 }
+
+					 case SDLK_RIGHT:
+					 {
+						 oRenderEngine.debugAngle += 0.1;
+						 if (oRenderEngine.debugAngle >= 2 * M_PI){
+							 oRenderEngine.debugAngle = 0;
+						 }
+						 cout << oRenderEngine.debugAngle << endl;
+						 break;
+					 }
+					 case SDLK_LEFT:
+					 {
+						 oRenderEngine.debugAngle -= 0.1;
+						 if (oRenderEngine.debugAngle <= -2 * M_PI){
+							 oRenderEngine.debugAngle = 0;
+						 }
+						 cout << oRenderEngine.debugAngle << endl;
+						 break;
+					 }
+
+/*
 
 					 case SDLK_LEFT:
 					 {
@@ -109,7 +122,7 @@ int main() {
 						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
-
+*/
 
 				 }
 
