@@ -35,7 +35,7 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 	this->fov = fov * M_PI / 180.0 ;
 	this->halfFov = this->fov / 2;
 	this->angleBetweenRays =  (fov / (double)this->resX)  * M_PI / 180.0;
-	dToProjectionPlane = (resX/2)  / tan(this->fov/2);
+	dToProjectionPlane = (resX/2)  / tan(this->halfFov);
 	cout << "screen resolution: " << resX << "x" << resY << endl;
 	cout << "distance to proj plane: " << dToProjectionPlane << endl;
 	cout << "angle Between rays: " << this->angleBetweenRays << endl;
@@ -83,8 +83,8 @@ void renderEngine::drawFrame(){
 			posCloser = &posOutV;
 		}
         // slice height = actual slice height / distance to slice * distance to projection plane
-		long sliceHeight = (oMap->getMapBlockSize() * posOutH.distance) / dToProjectionPlane;
-		//cout << "sluiceHeight:" << sliceHeight << endl;
+		double sliceHeight = (oMap->getMapBlockSize() / (double) posCloser->distance) * dToProjectionPlane;
+		cout << "sluiceHeight:" << sliceHeight << endl;
 
 		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
 	}
