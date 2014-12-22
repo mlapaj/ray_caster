@@ -72,9 +72,9 @@ bool map::isWallOnPosition(long x,long y)
 	else if (MapData[cordX][cordY] != 0){
 		retVal = true;
 	}
-	if (retVal == true)
+	//if (retVal == true)
 	{
-		cout << "x: " << x << "y: " << y << "cordX: " <<  cordX << " cordY: " << cordY << " Data: " << ":"  << retVal << endl;
+		//cout << "x: " << x << "y: " << y << "cordX: " <<  cordX << " cordY: " << cordY << " Data: " << ":"  << retVal << endl;
 	}
 	}
 	catch (...)

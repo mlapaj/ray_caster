@@ -44,42 +44,87 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 }
 
 void renderEngine::drawFrame(){
+	// to fix
+	if ((oMap->getWidth()) / oMap->getMapBlockSize() > (oMap->getHeight() / oMap->getMapBlockSize()))
+	{
+		debugRow = (oMap->getWidth() / oMap->getMapBlockSize()) +1;
+	}
+	else
+	{
+		debugRow = (oMap->getHeight() / oMap->getMapBlockSize()) +1;
+	}
+	SDL_SetRenderDrawColor(render,0,0,0,0);
+	SDL_RenderClear(render);
+	objectPosition pos;
+	pos.x = debugPlayerPositionX;
+	pos.y = debugPlayerPositionY;
+
+	double i = debugAngle;
+	objectPosition posOutH;
+	objectPosition posOutV;
+	objectPosition *posCloser;
+	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
+	{
+		pos.angle = i;
+
+
+		posOutH = castRayHorizontally(pos);
+		posOutV = castRayVeritically(pos);
+        posCloser = &posOutV;
+
+		if (posOutH.distance < posOutV.distance)
+		{
+			SDL_SetRenderDrawColor(render,0,255,0,0);
+			posCloser = &posOutH;
+		}
+		else
+		{
+			SDL_SetRenderDrawColor(render,255,0,0,0);
+			posCloser = &posOutV;
+		}
+        // slice height = actual slice height / distance to slice * distance to projection plane
+		long sliceHeight = (oMap->getMapBlockSize() * posOutH.distance) / dToProjectionPlane;
+		//cout << "sluiceHeight:" << sliceHeight << endl;
+
+		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
+	}
+	SDL_RenderPresent(render);
+}
+
+
+void renderEngine::debugDrawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	objectPosition pos;
 	pos.x = 256;
 	pos.y = 256;
 
-    double i = 0;
-	int z = 0;
+	double i = 0;
+	objectPosition posOutH;
+	objectPosition posOutV;
+	objectPosition *posCloser;
+
 	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
 	{
-		z++;
 		pos.angle = i;
-		objectPosition posOutH;
-		objectPosition posOutV;
+
+
 
 		posOutH = castRayHorizontally(pos);
 		posOutV = castRayVeritically(pos);
-
-		//cout << "H: "<<posOutH.distance << "V:" << posOutV.distance << endl;
 		if (posOutH.distance < posOutV.distance)
 		{
 			SDL_SetRenderDrawColor(render,0,255,0,0);
-			SDL_RenderDrawLine(render,pos.x,pos.y,posOutH.x,posOutH.y);
+			posCloser = &posOutH;
 		}
 		else
 		{
-
 			SDL_SetRenderDrawColor(render,255,0,0,0);
-			SDL_RenderDrawLine(render,pos.x,pos.y,posOutV.x,posOutV.y);
+			posCloser = &posOutV;
 		}
-		//SDL_SetRenderDrawColor(render,0,255,0,0);
-		//SDL_RenderDrawLine(render,pos.x,pos.y,posOutH.x,posOutH.y);
 
+		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
 	}
-
-
 	SDL_RenderPresent(render);
 }
 
@@ -92,6 +137,8 @@ renderEngine::~renderEngine() {
 // its ok
 objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 {
+
+
 	// we should normalize angle here
 	double angle =  pos.angle;
     double tanAngle = tan(angle);
@@ -115,6 +162,7 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 		angle = angle - 2*M_PI;
 	}
 
+
 	for (int i=0;i<debugRow;i++)
 	{
 
@@ -136,6 +184,7 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 			if (0==i)
 			{
 				deltaYa += -(pos.y-(pos.y / mapBlockSize + 1) * mapBlockSize) +1;
+
 			}
 			else
 			{
@@ -143,7 +192,7 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 			}
 			deltaXa = -(deltaYa * tan(angle));
 		}
-		//cout << pos.x + deltaXa << endl;
+
 		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
 		{
 			break;
@@ -174,21 +223,18 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 
 	long deltaYa = 0;
 	long deltaXa = 0;
-	long oldDeltaXa = 0;
-	long oldDeltaYa = 0;
-	bool wallFoun = false;
+
 	// first coordinates
 	for (int i=0;i<debugRow;i++)
 		{
-			oldDeltaXa = deltaXa;
-			oldDeltaYa = deltaYa;
-
 			if (((angle > 0) && (angle < M_PI)) || // 0 to 180
 				((angle < -M_PI) && (angle > 2*-M_PI))) // -180 to -360
 			{
 				if (0 == i)
 				{
-					deltaXa += (pos.x - int(pos.x / mapBlockSize) * mapBlockSize) +1;
+					deltaXa += -(pos.x - int(pos.x / mapBlockSize+1) * mapBlockSize) + 1;
+
+					//cout << "pos" << pos.x << " deltaXa1: " << deltaXa << endl;
 				}
 				else
 				{
@@ -199,12 +245,13 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 				if (deltaYa < -1000000){
 					deltaYa = -1000000;
 				}
+
 			}
 			else
 			{
 				if (0 == i)
 				{
-					deltaXa += (pos.x - int(pos.x / mapBlockSize  + 1) * mapBlockSize) -1;
+					deltaXa += -(pos.x - int(pos.x / mapBlockSize) * mapBlockSize) -1;
 				}
 				else
 				{
@@ -217,11 +264,11 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 					deltaYa = -1000000;
 				}
 
+
 			}
 
 			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
 			{
-				bool wallFound = true;
 				break;
 			}
 		}

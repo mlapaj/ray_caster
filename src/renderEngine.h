@@ -15,8 +15,12 @@ class renderEngine {
 public:
 	double debugAngle = 0;
 	int debugRow = 1;
+	long debugPlayerPositionX = 256;
+	long debugPlayerPositionY = 256;
+
 	renderEngine(int resX,int resY,int fov,shared_ptr<map> rMap);
 	void drawFrame();
+	void debugDrawFrame();
 	virtual ~renderEngine();
 private:
 	int mapBlockSize;

@@ -84,6 +84,33 @@ int main() {
 						 break;
 					 }
 
+					 case SDLK_UP:
+					 {
+						 oRenderEngine.debugPlayerPositionY--;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
+						 break;
+					 }
+					 case SDLK_DOWN:
+					 {
+						 oRenderEngine.debugPlayerPositionY++;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
+						 break;
+					 }
+
+					 case SDLK_LEFT:
+					 {
+						 oRenderEngine.debugPlayerPositionX--;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
+						 break;
+					 }
+					 case SDLK_RIGHT:
+					 {
+						 oRenderEngine.debugPlayerPositionX++;
+						 cout << "debugRow" << oRenderEngine.debugRow << endl;
+						 break;
+					 }
+
+
 				 }
 
 			}
