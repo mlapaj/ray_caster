@@ -12,6 +12,12 @@
 #include "objectPositon.h"
 using namespace std;
 
+struct wallPositionDetails{
+	bool isWall;
+	int slice;
+};
+
+
 class mapLoader;
 class map {
 public:
@@ -19,7 +25,7 @@ public:
 	int getHeight();
 	int getWidth();
 	objectPosition getDefaultPlayerPos();
-	bool isWallOnPosition(long x,long y);
+	bool isWallOnPosition(long x,long y,wallPositionDetails *details);
 	int getMapBlockSize();
 	virtual ~map();
 	friend class mapLoader;

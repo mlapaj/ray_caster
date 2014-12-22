@@ -45,6 +45,15 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 
 
 void renderEngine::drawFrame(){
+
+	temp = SDL_LoadBMP("tex2.bmp");
+	if (temp == NULL) {
+		cout << "error!";
+		return;
+	}
+	texture = SDL_CreateTextureFromSurface(render, temp);
+
+
 	//debugPlane();
 	//return;
 	// to fix
@@ -87,26 +96,44 @@ void renderEngine::drawFrame(){
 			SDL_SetRenderDrawColor(render,255,0,0,0);
 			posCloser = &posOutV;
 		}
-        // slice height = actual slice height / distance to slice * distance to projection plane
+		cout << "texture slice" << posCloser->sliceNo << endl;
+		// slice height = actual slice height / distance to slice * distance to projection plane
 
 		double distanceToSlice = 0;
 
 		distanceToSlice = (double)posCloser->distance * cos(i-debugAngle);
 
 		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
-		cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
+		//cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
 
-		drawSlice(z,sliceHeight);
+		drawSlice(z,sliceHeight,posCloser->sliceNo);
 	}
 	cout << "Z is:" << z <<endl;
+
+
+
 
 	SDL_RenderPresent(render);
 }
 
-void renderEngine::drawSlice(int which,int height){
+void renderEngine::drawSlice(int which,int height,int sliceNo){
 
 	int center = resY / 2;
-	SDL_RenderDrawLine(render,which,center-height,which,center+height);
+
+
+	SDL_Rect src,dst;
+	src.x=0+sliceNo;
+	src.y=0;
+	src.w=1;
+	src.h=64;
+
+	dst.x=which;
+	dst.y=center-height;
+	dst.w=1;
+	dst.h=height*2;
+	SDL_RenderCopy(render, texture, &src, &dst);
+
+	//SDL_RenderDrawLine(render,which,center-height,which,center+height);
 }
 
 
@@ -166,7 +193,7 @@ void renderEngine::debugDrawFrame(){
 			SDL_SetRenderDrawColor(render,255,0,0,0);
 			posCloser = &posOutV;
 		}
-
+		;
 		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
 	}
 	SDL_RenderPresent(render);
@@ -236,9 +263,12 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 			}
 			deltaXa = -(deltaYa * tan(angle));
 		}
-
-		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
+		// faster
+		static wallPositionDetails detail;
+		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,&detail))
 		{
+			pos.sliceNo = (pos.x + deltaXa) % mapBlockSize;
+			//cout << "sliceH:" << pos.sliceNo << endl;
 			break;
 		}
 
@@ -310,9 +340,12 @@ objectPosition renderEngine::castRayVeritically(objectPosition pos)
 
 
 			}
-
-			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa))
+			// faster
+			static wallPositionDetails detail;
+			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,&detail))
 			{
+				pos.sliceNo = (pos.y + deltaYa) % mapBlockSize;
+				//cout << "sliceV:" << pos.sliceNo << endl;
 				break;
 			}
 		}

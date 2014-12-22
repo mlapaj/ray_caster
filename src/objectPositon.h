@@ -13,6 +13,7 @@ struct objectPosition{
 	int y;
 	double angle;
 	long distance;
+	int sliceNo;
 };
 
 

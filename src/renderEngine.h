@@ -26,10 +26,14 @@ public:
 	double diffX = 0;
 	double diffY = 0;
 
+	SDL_Surface *temp;
+	SDL_Texture *texture;
+
+
 
 	renderEngine(int resX,int resY,int fov,shared_ptr<map> rMap);
 	void drawFrame();
-	void drawSlice(int which,int height);
+	void drawSlice(int which,int height,int sliceNo);
 	void debugDrawFrame();
 	void debugPlane();
 	virtual ~renderEngine();

@@ -61,7 +61,7 @@ int map::getMapBlockSize()
 }
 
 
-bool map::isWallOnPosition(long x,long y)
+bool map::isWallOnPosition(long x,long y,wallPositionDetails *details)
 {
 	bool retVal = false;
 	long cordX = x/blockSize;
@@ -72,7 +72,7 @@ bool map::isWallOnPosition(long x,long y)
 	else if (MapData[cordX][cordY] != 0){
 		retVal = true;
 	}
-	//if (retVal == true)
+	if (retVal == true)
 	{
 		//cout << "x: " << x << "y: " << y << "cordX: " <<  cordX << " cordY: " << cordY << " Data: " << ":"  << retVal << endl;
 	}
@@ -81,6 +81,6 @@ bool map::isWallOnPosition(long x,long y)
 	{
 		cout << "error";
 	}
-
+	details->isWall = retVal;
 	return retVal;
 }
