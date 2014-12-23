@@ -8,13 +8,15 @@
 #include <iostream>
 #include <memory>
 
-#include "mapLoader.h"
-#include "renderEngine.h"
 #include <SDL.h>
+
+#include "RenderEngine.h"
 
 using namespace std;
 
+/*
 int main() {
+
 	const int screenWidth = 640;
 	const int screenHeight = 480;
 
@@ -23,15 +25,15 @@ int main() {
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
 	}
 
-	mapLoader oMapLoader;
-	shared_ptr<map> pMap(oMapLoader.loadMapFromFile("level1.map"));
+	MapLoader oMapLoader;
+	shared_ptr<RayCaster::Map> pMap(oMapLoader.loadMapFromFile("level1.map"));
 
 	pMap->PrintMap();
 	cout << pMap->getWidth() << "x" << pMap->getHeight() << endl;
 	cout << "default player pos: X:" << pMap->getDefaultPlayerPos().x << " Y:" << pMap->getDefaultPlayerPos().y << endl;
 
 
-	renderEngine oRenderEngine(screenWidth,screenHeight,60,pMap);
+	RenderEngine oRenderEngine(screenWidth,screenHeight,60,pMap);
 
 	 SDL_Event e;
 	 bool quit = false;
@@ -64,20 +66,6 @@ int main() {
 						 cout << "debugRow" << oRenderEngine.debugRow << endl;
 						 break;
 					 }
-/*
-					 case SDLK_UP:
-					 {
-						 oRenderEngine.debugPlayerPositionY--;
-						 cout << "debugRow" << oRenderEngine.debugRow << endl;
-						 break;
-					 }
-					 case SDLK_DOWN:
-					 {
-						 oRenderEngine.debugPlayerPositionY++;
-						 cout << "debugRow" << oRenderEngine.debugRow << endl;
-						 break;
-					 }
-*/
 					 case SDLK_UP:
 					 {
 						 oRenderEngine.debugForward();
@@ -108,21 +96,6 @@ int main() {
 						 break;
 					 }
 
-/*
-
-					 case SDLK_LEFT:
-					 {
-						 oRenderEngine.debugPlayerPositionX--;
-						 cout << "debugRow" << oRenderEngine.debugRow << endl;
-						 break;
-					 }
-					 case SDLK_RIGHT:
-					 {
-						 oRenderEngine.debugPlayerPositionX++;
-						 cout << "debugRow" << oRenderEngine.debugRow << endl;
-						 break;
-					 }
-*/
 
 				 }
 
@@ -132,4 +105,5 @@ int main() {
 	//Quit SDL subsystems
 	SDL_Quit();
 	return 0;
-}
+
+}*/

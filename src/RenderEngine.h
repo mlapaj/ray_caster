@@ -8,10 +8,10 @@
 #ifndef RENDERENGINE_H_
 #define RENDERENGINE_H_
 #include <memory>
-#include "map.h"
 #include <SDL.h>
+#include "Map.h"
 
-class renderEngine {
+class RenderEngine {
 public:
 	bool debugDistor = false;
 	double debugAngle = 0;
@@ -31,12 +31,12 @@ public:
 
 
 
-	renderEngine(int resX,int resY,int fov,shared_ptr<map> rMap);
+	RenderEngine(int resX,int resY,int fov,shared_ptr<RayCaster::Map> rMap);
 	void drawFrame();
 	void drawSlice(int which,int height,int sliceNo);
 	void debugDrawFrame();
 	void debugPlane();
-	virtual ~renderEngine();
+	virtual ~RenderEngine();
 private:
 	int mapBlockSize;
 	int resX;
@@ -48,9 +48,9 @@ private:
 	double fov; // in radians
 	double halfFov;
 	double angleBetweenRays; // in radians
-	shared_ptr<map> &oMap;
-	objectPosition castRayHorizontally(objectPosition pos);
-	objectPosition castRayVeritically(objectPosition pos);
+	shared_ptr<RayCaster::Map> &oMap;
+	ObjectPosition castRayHorizontally(ObjectPosition pos);
+	ObjectPosition castRayVeritically(ObjectPosition pos);
 };
 
 #endif /* RENDERENGINE_H_ */

@@ -5,11 +5,12 @@
  *      Author: lapajmar
  */
 
-#include "renderEngine.h"
+#include "RenderEngine.h"
+
 #include <cmath>
 #define deg2rad(x) ((x) * M_PI / 180.0)
 
-renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oMap(rMap) {
+RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap):oMap(rMap) {
 
 	 //Create window
 	 window = SDL_CreateWindow( "SDL Tutorial", 100, 100, resX, resY, SDL_WINDOW_SHOWN );
@@ -44,7 +45,7 @@ renderEngine::renderEngine(int resX, int resY, int fov, shared_ptr<map> rMap):oM
 }
 
 
-void renderEngine::drawFrame(){
+void RenderEngine::drawFrame(){
 
 	temp = SDL_LoadBMP("tex2.bmp");
 	if (temp == NULL) {
@@ -67,14 +68,14 @@ void renderEngine::drawFrame(){
 	}
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
-	objectPosition pos;
+	ObjectPosition pos;
 	pos.x = debugPlayerPositionX + diffX;
 	pos.y = debugPlayerPositionY + diffY;
 
 	double i = debugAngle;
-	objectPosition posOutH;
-	objectPosition posOutV;
-	objectPosition *posCloser;
+	ObjectPosition posOutH;
+	ObjectPosition posOutV;
+	ObjectPosition *posCloser;
 	int z=0;
 	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
 	{
@@ -116,7 +117,7 @@ void renderEngine::drawFrame(){
 	SDL_RenderPresent(render);
 }
 
-void renderEngine::drawSlice(int which,int height,int sliceNo){
+void RenderEngine::drawSlice(int which,int height,int sliceNo){
 
 	int center = resY / 2;
 
@@ -137,14 +138,14 @@ void renderEngine::drawSlice(int which,int height,int sliceNo){
 }
 
 
-void renderEngine::debugForward(){
+void RenderEngine::debugForward(){
 	toDiffX= sin(debugAngle);
 	toDiffY= -cos(debugAngle);
 	diffX += toDiffX *3;
 	diffY += toDiffY *3;
 }
 
-void renderEngine::debugBackward(){
+void RenderEngine::debugBackward(){
 	toDiffX= sin(debugAngle);
 	toDiffY= -cos(debugAngle);
 	diffX -= toDiffX * 3;
@@ -153,7 +154,7 @@ void renderEngine::debugBackward(){
 
 
 
-void renderEngine::debugPlane()
+void RenderEngine::debugPlane()
 {
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
@@ -163,17 +164,17 @@ void renderEngine::debugPlane()
 	SDL_RenderPresent(render);
 }
 
-void renderEngine::debugDrawFrame(){
+void RenderEngine::debugDrawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
-	objectPosition pos;
+	ObjectPosition pos;
 	pos.x = 256;
 	pos.y = 256;
 
 	double i = 0;
-	objectPosition posOutH;
-	objectPosition posOutV;
-	objectPosition *posCloser;
+	ObjectPosition posOutH;
+	ObjectPosition posOutV;
+	ObjectPosition *posCloser;
 
 	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
 	{
@@ -199,14 +200,14 @@ void renderEngine::debugDrawFrame(){
 	SDL_RenderPresent(render);
 }
 
-renderEngine::~renderEngine() {
+RenderEngine::~RenderEngine() {
 	//Destroy window
 	SDL_DestroyWindow( window );
 }
 
 
 // its ok
-objectPosition renderEngine::castRayHorizontally(objectPosition pos)
+ObjectPosition RenderEngine::castRayHorizontally(ObjectPosition pos)
 {
 
 
@@ -281,7 +282,7 @@ objectPosition renderEngine::castRayHorizontally(objectPosition pos)
 
 
 // its not ok
-objectPosition renderEngine::castRayVeritically(objectPosition pos)
+ObjectPosition RenderEngine::castRayVeritically(ObjectPosition pos)
 {
 	// we should normalize angle
 	double angle =  pos.angle;

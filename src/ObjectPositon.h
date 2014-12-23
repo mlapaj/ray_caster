@@ -8,7 +8,7 @@
 #ifndef OBJECTPOSITON_H_
 #define OBJECTPOSITON_H_
 
-struct objectPosition{
+struct ObjectPosition{
 	int x;
 	int y;
 	double angle;
