@@ -17,8 +17,6 @@ using namespace log4cxx;
 namespace RayCaster {
 
 class Game {
-private:
-	log4cxx::LoggerPtr logger;
 public:
 	Game();
 	virtual ~Game();

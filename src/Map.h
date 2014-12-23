@@ -8,7 +8,6 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <log4cxx/logger.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -38,7 +37,6 @@ namespace RayCaster
 		// temporary
 		Map(int height,int width,ObjectPosition pos,vector<vector<int> > MapData);
 	private:
-		log4cxx::LoggerPtr logger;
 		int heightInBlocks;
 		int widthInBlocks;
 

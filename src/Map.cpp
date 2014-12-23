@@ -49,14 +49,13 @@ RayCaster::Map::Map(string fileName){
 		cout << "file not found" << endl;
 	}
 
-	LOG4CXX_TRACE(logger, "Class created");
+
 }
 
 
 RayCaster::Map::Map(int width,int height,ObjectPosition pos,vector<vector<int> > MapData) {
 	// TODO Auto-generated constructor stub
 
-	LOG4CXX_TRACE(logger, "Test1");
 	cout << "!!!2";
 	cout << "Map constructor: " << width << "x" << height << endl;
 
