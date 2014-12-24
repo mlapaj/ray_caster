@@ -29,7 +29,7 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 			 }
 
 	 }
-
+	textures.reset(new Textures(render));
 
 	this->resX = resX;
 	this->resY = resY;
@@ -47,12 +47,7 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 
 void RayCaster::RenderEngine::drawFrame(){
 
-	temp = SDL_LoadBMP("tex2.bmp");
-	if (temp == NULL) {
-		cout << "error!";
-		return;
-	}
-	texture = SDL_CreateTextureFromSurface(render, temp);
+
 
 	if ((oMap->getWidth()) / oMap->getMapBlockSize() > (oMap->getHeight() / oMap->getMapBlockSize()))
 	{
@@ -95,11 +90,9 @@ void RayCaster::RenderEngine::drawFrame(){
 			SDL_SetRenderDrawColor(render,255,0,0,0);
 			posCloser = &posOutV;
 		}
-		//cout << "texture slice" << posCloser->sliceNo << endl;
-		// slice height = actual slice height / distance to slice * distance to projection plane
 
 		double distanceToSlice = 0;
-
+		// slice height = actual slice height / distance to slice * distance to projection plane
 		distanceToSlice = (double)posCloser->distance * cos(i-angle);
 
 		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
@@ -107,10 +100,6 @@ void RayCaster::RenderEngine::drawFrame(){
 
 		drawSlice(z,sliceHeight,posCloser->sliceNo);
 	}
-	//cout << "Z is:" << z <<endl;
-
-
-
 
 	SDL_RenderPresent(render);
 }
@@ -130,24 +119,12 @@ void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo){
 	dst.y=center-height;
 	dst.w=1;
 	dst.h=height*2;
+	SDL_Texture *texture = textures->getTexture(1);
 	SDL_RenderCopy(render, texture, &src, &dst);
 
 	//SDL_RenderDrawLine(render,which,center-height,which,center+height);
 }
 
-
-
-
-
-void RayCaster::RenderEngine::debugPlane()
-{
-	SDL_SetRenderDrawColor(render,0,0,0,0);
-	SDL_RenderClear(render);
-	SDL_SetRenderDrawColor(render,255,0,0,0);
-	SDL_RenderDrawPoint(render,100+diffX*3,100+diffY*3);
-
-	SDL_RenderPresent(render);
-}
 
 void RayCaster::RenderEngine::debugDrawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);

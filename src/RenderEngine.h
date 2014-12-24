@@ -11,6 +11,7 @@
 #include <SDL.h>
 #include "Map.h"
 #include "Player.h"
+#include "Textures.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -24,24 +25,13 @@ namespace RayCaster
 {
 	class RenderEngine {
 	public:
-		bool debugDistor = false;
 		int debugRow = 1;
-
-		double toDiffX = 0;
-		double toDiffY = 0;
-		double diffX = 0;
-		double diffY = 0;
-
-		SDL_Surface *temp;
-		SDL_Texture *texture;
-
 
 
 		RenderEngine(int resX,int resY,int fov,shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player);
 		void drawFrame();
 		void drawSlice(int which,int height,int sliceNo);
 		void debugDrawFrame();
-		void debugPlane();
 		virtual ~RenderEngine();
 	private:
 		shared_ptr<Player> player;
@@ -59,6 +49,7 @@ namespace RayCaster
 		shared_ptr<RayCaster::Map> oMap;
 		ObjectPosition castRayHorizontally(ObjectPosition pos);
 		ObjectPosition castRayVeritically(ObjectPosition pos);
+		shared_ptr<RayCaster::Textures> textures;
 	};
 }
 #endif /* RENDERENGINE_H_ */

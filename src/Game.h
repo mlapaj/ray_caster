@@ -13,6 +13,7 @@
 #include "RenderEngine.h"
 #include "KeyboardInput.h"
 #include "Player.h"
+#include "Textures.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"

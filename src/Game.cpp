@@ -10,7 +10,7 @@
 namespace RayCaster {
 
 Game::Game() {
-	logger.debug("Class constructor");
+	logger << log4cpp::Priority::DEBUG << "Class constructor";
 	player.reset(new Player());
 	player->setPlayerPos(255,255,0);
     currentMap.reset(new Map("level1.map"));
@@ -43,7 +43,7 @@ void Game::endGame()
 
 
 Game::~Game() {
-	logger.debug("Class destructor");
+	logger << log4cpp::Priority::DEBUG << "Class destructor";
 }
 
 } /* namespace RayCaster */
