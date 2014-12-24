@@ -10,8 +10,8 @@
 #include <cmath>
 #define deg2rad(x) ((x) * M_PI / 180.0)
 
-RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap):oMap(rMap) {
-
+RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap):oMap(rMap) {
+	 logger << log4cpp::Priority::DEBUG << "Class constructor";
 	 //Create window
 	 window = SDL_CreateWindow( "SDL Tutorial", 100, 100, resX, resY, SDL_WINDOW_SHOWN );
 	 if( window == NULL )
@@ -45,7 +45,7 @@ RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Ma
 }
 
 
-void RenderEngine::drawFrame(){
+void RayCaster::RenderEngine::drawFrame(){
 
 	temp = SDL_LoadBMP("tex2.bmp");
 	if (temp == NULL) {
@@ -54,10 +54,6 @@ void RenderEngine::drawFrame(){
 	}
 	texture = SDL_CreateTextureFromSurface(render, temp);
 
-
-	//debugPlane();
-	//return;
-	// to fix
 	if ((oMap->getWidth()) / oMap->getMapBlockSize() > (oMap->getHeight() / oMap->getMapBlockSize()))
 	{
 		debugRow = (oMap->getWidth() / oMap->getMapBlockSize()) +1;
@@ -66,6 +62,7 @@ void RenderEngine::drawFrame(){
 	{
 		debugRow = (oMap->getHeight() / oMap->getMapBlockSize()) +1;
 	}
+
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	ObjectPosition pos;
@@ -117,7 +114,7 @@ void RenderEngine::drawFrame(){
 	SDL_RenderPresent(render);
 }
 
-void RenderEngine::drawSlice(int which,int height,int sliceNo){
+void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo){
 
 	int center = resY / 2;
 
@@ -138,14 +135,14 @@ void RenderEngine::drawSlice(int which,int height,int sliceNo){
 }
 
 
-void RenderEngine::debugForward(){
+void RayCaster::RenderEngine::debugForward(){
 	toDiffX= sin(debugAngle);
 	toDiffY= -cos(debugAngle);
 	diffX += toDiffX *3;
 	diffY += toDiffY *3;
 }
 
-void RenderEngine::debugBackward(){
+void RayCaster::RenderEngine::debugBackward(){
 	toDiffX= sin(debugAngle);
 	toDiffY= -cos(debugAngle);
 	diffX -= toDiffX * 3;
@@ -154,7 +151,7 @@ void RenderEngine::debugBackward(){
 
 
 
-void RenderEngine::debugPlane()
+void RayCaster::RenderEngine::debugPlane()
 {
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
@@ -164,7 +161,7 @@ void RenderEngine::debugPlane()
 	SDL_RenderPresent(render);
 }
 
-void RenderEngine::debugDrawFrame(){
+void RayCaster::RenderEngine::debugDrawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	ObjectPosition pos;
@@ -200,14 +197,15 @@ void RenderEngine::debugDrawFrame(){
 	SDL_RenderPresent(render);
 }
 
-RenderEngine::~RenderEngine() {
+RayCaster::RenderEngine::~RenderEngine() {
+	logger << log4cpp::Priority::DEBUG << "Class destructor";
 	//Destroy window
 	SDL_DestroyWindow( window );
 }
 
 
 // its ok
-ObjectPosition RenderEngine::castRayHorizontally(ObjectPosition pos)
+ObjectPosition RayCaster::RenderEngine::castRayHorizontally(ObjectPosition pos)
 {
 
 
@@ -280,9 +278,8 @@ ObjectPosition RenderEngine::castRayHorizontally(ObjectPosition pos)
 	return pos;
 }
 
-
 // its not ok
-ObjectPosition RenderEngine::castRayVeritically(ObjectPosition pos)
+ObjectPosition RayCaster::RenderEngine::castRayVeritically(ObjectPosition pos)
 {
 	// we should normalize angle
 	double angle =  pos.angle;

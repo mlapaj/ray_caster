@@ -8,16 +8,19 @@
 #include "Map.h"
 
 #include <cmath>
+#include <iostream>
 #include <fstream>
 using namespace std;
 
 RayCaster::Map::Map(string fileName){
+	logger << log4cpp::Priority::DEBUG << "Class constructor";
 
 	int height;
 	int width;
 	int player_x, player_y,player_angle;
 
-	cout << "Loading map. Filename: " << fileName << endl;
+	logger << log4cpp::Priority::DEBUG << "Loading map. Filename: " << fileName;
+
 
 	ifstream mapa;
 	mapa.open(fileName.c_str());
@@ -42,37 +45,29 @@ RayCaster::Map::Map(string fileName){
 		}
 		mapa.close();
 
-		RayCaster::Map(width,height,playerPos,mapData);
+
+		defaultPlayerPos = playerPos;
+		defaultPlayerPos.x = (defaultPlayerPos.x * blockSize) + blockSize/2;
+		defaultPlayerPos.y = (defaultPlayerPos.y * blockSize) + blockSize/2;
+
+		this->width = width * blockSize;
+		this->height = height * blockSize;
+		this->MapData = mapData;
+		this->widthInBlocks = width;
+		this->heightInBlocks = height;
+
 	}
 	else
 	{
 		cout << "file not found" << endl;
 	}
-
-
+	return;
 }
 
 
-RayCaster::Map::Map(int width,int height,ObjectPosition pos,vector<vector<int> > MapData) {
-	// TODO Auto-generated constructor stub
-
-	cout << "!!!2";
-	cout << "Map constructor: " << width << "x" << height << endl;
-
-	defaultPlayerPos = pos;
-	defaultPlayerPos.x = (defaultPlayerPos.x * blockSize) + blockSize/2;
-	defaultPlayerPos.y = (defaultPlayerPos.y * blockSize) + blockSize/2;
-
-	this->widthInBlocks = width;
-	this->heightInBlocks = height;
-	this->width = width * blockSize;
-	this->height = height * blockSize;
-	this->MapData = MapData;
-
-}
 
 RayCaster::Map::~Map() {
-	//LOG4CXX_TRACE(logger, "Class destroyed");
+	logger << log4cpp::Priority::DEBUG << "Class destructor";
 }
 
 void RayCaster::Map::PrintMap(){

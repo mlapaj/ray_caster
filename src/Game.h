@@ -8,11 +8,20 @@
 #ifndef GAME_H_
 #define GAME_H_
 #include <memory>
-#include <log4cxx/logger.h>
 
 #include "Map.h"
+#include "RenderEngine.h"
+#include "KeyboardInput.h"
 
-using namespace log4cxx;
+#include "log4cpp/Category.hh"
+#include "log4cpp/Appender.hh"
+#include "log4cpp/FileAppender.hh"
+#include "log4cpp/OstreamAppender.hh"
+#include "log4cpp/Layout.hh"
+#include "log4cpp/BasicLayout.hh"
+#include "log4cpp/Priority.hh"
+
+
 
 namespace RayCaster {
 
@@ -20,8 +29,18 @@ class Game {
 public:
 	Game();
 	virtual ~Game();
+	void mainLoop();
+	void endGame();
 private:
+	bool hasEnded = false;
+	const int screenWidth = 640;
+	const int screenHeight = 480;
+	const int screenFov = 60;
+	log4cpp::Category& logger = log4cpp::Category::getInstance("Game");
 	shared_ptr<RayCaster::Map> currentMap;
+	shared_ptr<RayCaster::RenderEngine> renderEngine;
+	shared_ptr<RayCaster::KeyboardInput> keyboardInput;
+
 };
 
 } /* namespace RayCaster */

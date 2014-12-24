@@ -37,7 +37,14 @@ int main()
 	//log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
 	//sub1.addAppender(appender2);
 
-	root.info("root info");
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	{
+		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+	}
+
+	root.info("Program starting...");
 	RayCaster::Game oGame;
+	oGame.mainLoop();
+	SDL_Quit();
 	return 0;
 }

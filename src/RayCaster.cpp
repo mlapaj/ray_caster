@@ -16,25 +16,6 @@ using namespace std;
 
 /*
 int main() {
-
-	const int screenWidth = 640;
-	const int screenHeight = 480;
-
-	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-	{
-		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-	}
-
-	MapLoader oMapLoader;
-	shared_ptr<RayCaster::Map> pMap(oMapLoader.loadMapFromFile("level1.map"));
-
-	pMap->PrintMap();
-	cout << pMap->getWidth() << "x" << pMap->getHeight() << endl;
-	cout << "default player pos: X:" << pMap->getDefaultPlayerPos().x << " Y:" << pMap->getDefaultPlayerPos().y << endl;
-
-
-	RenderEngine oRenderEngine(screenWidth,screenHeight,60,pMap);
-
 	 SDL_Event e;
 	 bool quit = false;
 
@@ -102,8 +83,5 @@ int main() {
 			}
 		}
 
-	//Quit SDL subsystems
-	SDL_Quit();
-	return 0;
 
 }*/

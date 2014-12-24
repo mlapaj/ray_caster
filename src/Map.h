@@ -12,6 +12,15 @@
 #include <vector>
 #include <string>
 
+#include "log4cpp/Category.hh"
+#include "log4cpp/Appender.hh"
+#include "log4cpp/FileAppender.hh"
+#include "log4cpp/OstreamAppender.hh"
+#include "log4cpp/Layout.hh"
+#include "log4cpp/BasicLayout.hh"
+#include "log4cpp/Priority.hh"
+
+
 #include "ObjectPositon.h"
 using namespace std;
 
@@ -35,8 +44,8 @@ namespace RayCaster
 		virtual ~Map();
 		friend class MapLoader;
 		// temporary
-		Map(int height,int width,ObjectPosition pos,vector<vector<int> > MapData);
 	private:
+		log4cpp::Category& logger = log4cpp::Category::getInstance("Map");
 		int heightInBlocks;
 		int widthInBlocks;
 
