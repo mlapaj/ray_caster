@@ -22,6 +22,26 @@ void KeyboardInput::reactOnKey(SDL_Keycode &code) {
 			game.endGame();
 			break;
 		}
+		case SDLK_UP:
+		{
+			game.player->moveForward();
+			break;
+		}
+		case SDLK_DOWN:
+		{
+			game.player->moveBackward();
+			break;
+		}
+		case SDLK_LEFT:
+		{
+			game.player->turnLeft();
+			break;
+		}
+		case SDLK_RIGHT:
+		{
+			game.player->turnRight();
+			break;
+		}
 	}
 }
 

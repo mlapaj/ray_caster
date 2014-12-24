@@ -11,8 +11,10 @@ namespace RayCaster {
 
 Game::Game() {
 	logger.debug("Class constructor");
+	player.reset(new Player());
+	player->setPlayerPos(255,255,0);
     currentMap.reset(new Map("level1.map"));
-    renderEngine.reset(new RenderEngine(screenWidth,screenHeight,screenFov,currentMap));
+    renderEngine.reset(new RenderEngine(screenWidth,screenHeight,screenFov,currentMap,player));
     keyboardInput.reset(new KeyboardInput(*this));
 }
 

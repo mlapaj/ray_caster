@@ -29,11 +29,7 @@ int main() {
 			 {
 				 switch (e.key.keysym.sym)
 				 {
-					 case SDLK_q:
-					 {
-						 quit = true;
-						 break;
-					 }
+
 
 					 case SDLK_k:
 					 {

@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "RenderEngine.h"
 #include "KeyboardInput.h"
+#include "Player.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -31,6 +32,7 @@ public:
 	virtual ~Game();
 	void mainLoop();
 	void endGame();
+	shared_ptr<RayCaster::Player> player;
 private:
 	bool hasEnded = false;
 	const int screenWidth = 640;
@@ -40,6 +42,7 @@ private:
 	shared_ptr<RayCaster::Map> currentMap;
 	shared_ptr<RayCaster::RenderEngine> renderEngine;
 	shared_ptr<RayCaster::KeyboardInput> keyboardInput;
+
 
 };
 

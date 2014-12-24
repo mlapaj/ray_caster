@@ -10,6 +10,7 @@
 #include <memory>
 #include <SDL.h>
 #include "Map.h"
+#include "Player.h"
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -24,12 +25,7 @@ namespace RayCaster
 	class RenderEngine {
 	public:
 		bool debugDistor = false;
-		double debugAngle = 0;
 		int debugRow = 1;
-		long debugPlayerPositionX = 256;
-		long debugPlayerPositionY = 256;
-		void debugForward();
-		void debugBackward();
 
 		double toDiffX = 0;
 		double toDiffY = 0;
@@ -41,13 +37,14 @@ namespace RayCaster
 
 
 
-		RenderEngine(int resX,int resY,int fov,shared_ptr<RayCaster::Map> rMap);
+		RenderEngine(int resX,int resY,int fov,shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player);
 		void drawFrame();
 		void drawSlice(int which,int height,int sliceNo);
 		void debugDrawFrame();
 		void debugPlane();
 		virtual ~RenderEngine();
 	private:
+		shared_ptr<Player> player;
 		log4cpp::Category& logger = log4cpp::Category::getInstance("RenderEngine");
 		int mapBlockSize;
 		int resX;

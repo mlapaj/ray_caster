@@ -34,9 +34,6 @@ int main()
 	root.setPriority(log4cpp::Priority::DEBUG);
 	root.addAppender(appender1);
 
-	//log4cpp::Category& sub1 = log4cpp::Category::getInstance(std::string("sub1"));
-	//sub1.addAppender(appender2);
-
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{
 		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );

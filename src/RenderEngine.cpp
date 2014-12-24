@@ -10,7 +10,7 @@
 #include <cmath>
 #define deg2rad(x) ((x) * M_PI / 180.0)
 
-RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap):oMap(rMap) {
+RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player):oMap(rMap),player(player) {
 	 logger << log4cpp::Priority::DEBUG << "Class constructor";
 	 //Create window
 	 window = SDL_CreateWindow( "SDL Tutorial", 100, 100, resX, resY, SDL_WINDOW_SHOWN );
@@ -66,15 +66,16 @@ void RayCaster::RenderEngine::drawFrame(){
 	SDL_SetRenderDrawColor(render,0,0,0,0);
 	SDL_RenderClear(render);
 	ObjectPosition pos;
-	pos.x = debugPlayerPositionX + diffX;
-	pos.y = debugPlayerPositionY + diffY;
+	pos.x = player->getPlayerPosX(); // + diffX;
+	pos.y = player->getPlayerPosY(); // + diffY;
 
-	double i = debugAngle;
+	double angle = player->getPlayerAngle();
+	double i = angle;
 	ObjectPosition posOutH;
 	ObjectPosition posOutV;
 	ObjectPosition *posCloser;
 	int z=0;
-	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
+	for (i=angle-halfFov;i<angle+halfFov;i+=angleBetweenRays)
 	{
 		z++;
 		pos.angle = i;
@@ -94,19 +95,19 @@ void RayCaster::RenderEngine::drawFrame(){
 			SDL_SetRenderDrawColor(render,255,0,0,0);
 			posCloser = &posOutV;
 		}
-		cout << "texture slice" << posCloser->sliceNo << endl;
+		//cout << "texture slice" << posCloser->sliceNo << endl;
 		// slice height = actual slice height / distance to slice * distance to projection plane
 
 		double distanceToSlice = 0;
 
-		distanceToSlice = (double)posCloser->distance * cos(i-debugAngle);
+		distanceToSlice = (double)posCloser->distance * cos(i-angle);
 
 		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
 		//cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
 
 		drawSlice(z,sliceHeight,posCloser->sliceNo);
 	}
-	cout << "Z is:" << z <<endl;
+	//cout << "Z is:" << z <<endl;
 
 
 
@@ -135,19 +136,6 @@ void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo){
 }
 
 
-void RayCaster::RenderEngine::debugForward(){
-	toDiffX= sin(debugAngle);
-	toDiffY= -cos(debugAngle);
-	diffX += toDiffX *3;
-	diffY += toDiffY *3;
-}
-
-void RayCaster::RenderEngine::debugBackward(){
-	toDiffX= sin(debugAngle);
-	toDiffY= -cos(debugAngle);
-	diffX -= toDiffX * 3;
-	diffY -= toDiffY * 3;
-}
 
 
 
@@ -172,8 +160,8 @@ void RayCaster::RenderEngine::debugDrawFrame(){
 	ObjectPosition posOutH;
 	ObjectPosition posOutV;
 	ObjectPosition *posCloser;
-
-	for (i=debugAngle-halfFov;i<debugAngle+halfFov;i+=angleBetweenRays)
+	double angle = player->getPlayerAngle();
+	for (i=angle-halfFov;i<angle+halfFov;i+=angleBetweenRays)
 	{
 		pos.angle = i;
 

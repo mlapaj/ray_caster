@@ -7,12 +7,15 @@
 #include <SDL.h>
 
 #include "Game.h"
+#include "Player.h"
 
 #ifndef KEYBOARDINPUT_H_
 #define KEYBOARDINPUT_H_
 
 namespace RayCaster {
 class Game;
+class Player;
+
 class KeyboardInput {
 public:
 	KeyboardInput(Game &game);
