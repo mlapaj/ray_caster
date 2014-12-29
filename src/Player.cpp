@@ -9,7 +9,8 @@
 #include <math.h>
 namespace RayCaster {
 
-Player::Player() {
+Player::Player(shared_ptr<Map> map) {
+	this->map = map;
 	logger << log4cpp::Priority::DEBUG << "Class create";
 }
 
@@ -41,14 +42,53 @@ double Player::getPlayerAngle() {
 
 
 void Player::moveForward(){
-	PosOnMapX += toDiffX;
-	PosOnMapY += toDiffY;
+	if(!map->isWallOnPosition(PosOnMapX + 6 * toDiffX ,PosOnMapY + 6 * toDiffY))
+	{
+		PosOnMapX += toDiffX;
+		PosOnMapY += toDiffY;
+	}
+	else
+	{
+
+		if (!map->isWallOnPosition(PosOnMapX,PosOnMapY + 6 * toDiffY))
+		{
+			PosOnMapY += toDiffY;
+		}
+
+		else
+		{
+			if(!map->isWallOnPosition(PosOnMapX + 6 *toDiffX,PosOnMapY))
+			{
+				PosOnMapX += toDiffX;
+			}
+		}
+	}
+
 
 }
 
 void Player::moveBackward(){
-	PosOnMapX -= toDiffX;
-	PosOnMapY -= toDiffY;
+
+	if(!map->isWallOnPosition(PosOnMapX - 6 * toDiffX,PosOnMapY - 6 * toDiffY))
+	{
+		PosOnMapX -= toDiffX;
+		PosOnMapY -= toDiffY;
+	}
+	else
+	{
+		if(!map->isWallOnPosition(PosOnMapX - 6 * toDiffX,PosOnMapY))
+		{
+			PosOnMapX -= toDiffX;
+		}
+		else
+		if(!map->isWallOnPosition(PosOnMapX,PosOnMapY - 6 * toDiffY))
+		{
+			PosOnMapY -= toDiffY;
+		}
+
+
+
+	}
 }
 
 void Player::turnLeft(){
