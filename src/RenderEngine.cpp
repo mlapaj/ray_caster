@@ -38,7 +38,7 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 	this->resY = resY;
 	this->fov = fov * M_PI / 180.0 ;
 	this->halfFov = this->fov / 2;
-	this->angleBetweenRays =  (fov / (double)this->resX)  * M_PI / 180.0;
+	this->angleBetweenRays =  (this->fov / (double)this->resX);
 	dToProjectionPlane = (resX/2)  / tan(this->halfFov);
 	cout << "screen resolution: " << resX << "x" << resY << endl;
 	cout << "distance to proj plane: " << dToProjectionPlane << endl;
@@ -115,13 +115,12 @@ void RayCaster::RenderEngine::drawFrame(){
 		double distanceToSlice = 0;
 		// slice height = actual slice height / distance to slice * distance to projection plane
 		distanceToSlice = (double)castInfoCloser->distance * cos(i-angle);
-
-		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
+		// something wrong with height is !!!!!!!!!!
+		double sliceHeight = ((oMap->getMapBlockSize()/2) / distanceToSlice ) * dToProjectionPlane;
 		//cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
 
 		drawSlice(z,sliceHeight,castInfoCloser->sliceNo,castInfoCloser->textureNumber);
 	}
-
 	SDL_RenderPresent(render);
 }
 
@@ -130,7 +129,7 @@ void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo,int tex
 	int center = resY / 2;
 
 	SDL_Rect src,dst;
-	src.x=0+sliceNo;
+	src.x= ((double)sliceNo / mapBlockSize) * 64;
 	src.y=0;
 	src.w=1;
 	src.h=64;
