@@ -20,9 +20,15 @@ class KeyboardInput {
 public:
 	KeyboardInput(Game &game);
 	virtual ~KeyboardInput();
-	void reactOnKey(SDL_Keycode &code);
+	void reactOnKeyDown(SDL_Keycode &code);
+	void reactOnKeyUp(SDL_Keycode &code);
+	void action();
 private:
 	Game &game;
+	bool moveForward;
+	bool moveBackward;
+	bool moveLeft;
+	bool moveRight;
 };
 
 } /* namespace RayCaster */

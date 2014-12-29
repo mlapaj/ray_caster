@@ -7,14 +7,18 @@
 
 #include "KeyboardInput.h"
 
+
 namespace RayCaster {
 
 KeyboardInput::KeyboardInput(Game &game):game(game) {
 	// TODO Auto-generated constructor stub
-
+	moveBackward = false;
+	moveForward = false;
+	moveLeft = false;
+	moveRight = false;
 }
 
-void KeyboardInput::reactOnKey(SDL_Keycode &code) {
+void KeyboardInput::reactOnKeyDown(SDL_Keycode &code) {
 	switch (code)
 	{
 		case SDLK_q:
@@ -24,26 +28,71 @@ void KeyboardInput::reactOnKey(SDL_Keycode &code) {
 		}
 		case SDLK_UP:
 		{
-			game.player->moveForward();
+			moveForward = true;
+			//game.player->moveForward();
 			break;
 		}
 		case SDLK_DOWN:
 		{
-			game.player->moveBackward();
+			moveBackward = true;
+			//game.player->moveBackward();
 			break;
 		}
 		case SDLK_LEFT:
 		{
+			moveLeft = true;
 			game.player->turnLeft();
 			break;
 		}
 		case SDLK_RIGHT:
 		{
+			moveRight = true;
 			game.player->turnRight();
 			break;
 		}
 	}
 }
+
+
+void KeyboardInput::reactOnKeyUp(SDL_Keycode &code) {
+	switch (code)
+	{
+		case SDLK_q:
+		{
+			game.endGame();
+			break;
+		}
+		case SDLK_UP:
+		{
+			moveForward = false;
+			break;
+		}
+		case SDLK_DOWN:
+		{
+			moveBackward = false;
+			break;
+		}
+		case SDLK_LEFT:
+		{
+			moveLeft = false;
+			break;
+		}
+		case SDLK_RIGHT:
+		{
+			moveRight = false;
+			break;
+		}
+	}
+}
+
+
+void KeyboardInput::action(){
+	if (moveForward) game.player->moveForward();
+	if (moveBackward) game.player->moveBackward();
+	if (moveRight) game.player->turnRight();
+	if (moveLeft) game.player->turnLeft();
+}
+
 
 KeyboardInput::~KeyboardInput() {
 	// TODO Auto-generated destructor stub

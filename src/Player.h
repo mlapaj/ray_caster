@@ -25,8 +25,8 @@ private:
 	int PosOnMapX = 0;
 	int PosOnMapY = 0;
 	double angle = 0;
-	double toDiffX;
-	double toDiffY;
+	int toDiffX;
+	int toDiffY;
 	log4cpp::Category& logger = log4cpp::Category::getInstance("Player");
 public:
 	Player();

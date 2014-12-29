@@ -20,14 +20,15 @@
 #include "log4cpp/BasicLayout.hh"
 #include "log4cpp/Priority.hh"
 
-
 #include "ObjectPositon.h"
+#include "CastInfo.h"
 using namespace std;
 
 struct wallPositionDetails{
 	bool isWall;
 	int slice;
 };
+
 
 class MapLoader;
 namespace RayCaster
@@ -39,7 +40,7 @@ namespace RayCaster
 		int getHeight();
 		int getWidth();
 		ObjectPosition getDefaultPlayerPos();
-		bool isWallOnPosition(long x,long y,wallPositionDetails *details);
+		bool isWallOnPosition(long x,long y,CastInfo &details);
 		int getMapBlockSize();
 		virtual ~Map();
 		friend class MapLoader;

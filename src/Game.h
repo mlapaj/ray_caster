@@ -36,8 +36,8 @@ public:
 	shared_ptr<RayCaster::Player> player;
 private:
 	bool hasEnded = false;
-	const int screenWidth = 640;
-	const int screenHeight = 480;
+	const int screenWidth = 800;
+	const int screenHeight = 600;
 	const int screenFov = 60;
 	log4cpp::Category& logger = log4cpp::Category::getInstance("Game");
 	shared_ptr<RayCaster::Map> currentMap;

@@ -103,26 +103,17 @@ int RayCaster::Map::getMapBlockSize()
 }
 
 
-bool RayCaster::Map::isWallOnPosition(long x,long y,wallPositionDetails *details)
+bool RayCaster::Map::isWallOnPosition(long x,long y,CastInfo &details)
 {
 	bool retVal = false;
 	long cordX = x/blockSize;
 	long cordY = y/blockSize;
-	try{
+
 	if ((cordX<0) || (cordX>=widthInBlocks)){ retVal = true;}
 	else if ((cordY<0) || (cordY>=heightInBlocks)){ retVal = true;}
 	else if (MapData[cordX][cordY] != 0){
 		retVal = true;
+		details.textureNumber = MapData[cordX][cordY];
 	}
-	if (retVal == true)
-	{
-		//cout << "x: " << x << "y: " << y << "cordX: " <<  cordX << " cordY: " << cordY << " Data: " << ":"  << retVal << endl;
-	}
-	}
-	catch (...)
-	{
-		cout << "error";
-	}
-	details->isWall = retVal;
 	return retVal;
 }

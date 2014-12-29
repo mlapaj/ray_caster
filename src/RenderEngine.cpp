@@ -10,10 +10,13 @@
 #include <cmath>
 #define deg2rad(x) ((x) * M_PI / 180.0)
 
-RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player):oMap(rMap),player(player) {
+RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player){
+
+	 this->oMap = rMap;
+	 this->player = player;
 	 logger << log4cpp::Priority::DEBUG << "Class constructor";
-	 //Create window
-	 window = SDL_CreateWindow( "SDL Tutorial", 100, 100, resX, resY, SDL_WINDOW_SHOWN );
+	 //Create windowqqqq
+	 window = SDL_CreateWindow( "SDL Tutorial", 00, 00, resX, resY, SDL_WINDOW_FULLSCREEN); //  // // SDL_WINDOW_SHOWN
 	 if( window == NULL )
 	 {
 		 printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -42,13 +45,8 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 	cout << "angle Between rays: " << this->angleBetweenRays << endl;
 	// this should be changed when map block size will change from level to level
 	mapBlockSize = rMap->getMapBlockSize();
-}
 
-
-void RayCaster::RenderEngine::drawFrame(){
-
-
-
+	// TODO
 	if ((oMap->getWidth()) / oMap->getMapBlockSize() > (oMap->getHeight() / oMap->getMapBlockSize()))
 	{
 		debugRow = (oMap->getWidth() / oMap->getMapBlockSize()) +1;
@@ -58,7 +56,18 @@ void RayCaster::RenderEngine::drawFrame(){
 		debugRow = (oMap->getHeight() / oMap->getMapBlockSize()) +1;
 	}
 
-	SDL_SetRenderDrawColor(render,0,0,0,0);
+
+
+}
+
+
+void RayCaster::RenderEngine::drawFrame(){
+	static CastInfo castInfoV;
+	static CastInfo castInfoH;
+	static CastInfo *castInfoCloser;
+
+
+	SDL_SetRenderDrawColor(render,128,128,128,0);
 	SDL_RenderClear(render);
 	ObjectPosition pos;
 	pos.x = player->getPlayerPosX(); // + diffX;
@@ -66,9 +75,7 @@ void RayCaster::RenderEngine::drawFrame(){
 
 	double angle = player->getPlayerAngle();
 	double i = angle;
-	ObjectPosition posOutH;
-	ObjectPosition posOutV;
-	ObjectPosition *posCloser;
+
 	int z=0;
 	for (i=angle-halfFov;i<angle+halfFov;i+=angleBetweenRays)
 	{
@@ -76,38 +83,36 @@ void RayCaster::RenderEngine::drawFrame(){
 		pos.angle = i;
 
 
-		posOutH = castRayHorizontally(pos);
-		posOutV = castRayVeritically(pos);
-        posCloser = &posOutV;
+		castRayHorizontally(pos,castInfoH);
+		castRayVeritically(pos,castInfoV);
 
-		if (posOutH.distance < posOutV.distance)
+		if (castInfoH.distance < castInfoV.distance)
 		{
 			SDL_SetRenderDrawColor(render,0,255,0,0);
-			posCloser = &posOutH;
+			castInfoCloser = &castInfoH;
 		}
 		else
 		{
 			SDL_SetRenderDrawColor(render,255,0,0,0);
-			posCloser = &posOutV;
+			castInfoCloser = &castInfoV;
 		}
 
 		double distanceToSlice = 0;
 		// slice height = actual slice height / distance to slice * distance to projection plane
-		distanceToSlice = (double)posCloser->distance * cos(i-angle);
+		distanceToSlice = (double)castInfoCloser->distance * cos(i-angle);
 
 		double sliceHeight = (oMap->getMapBlockSize() / distanceToSlice ) * dToProjectionPlane;
 		//cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
 
-		drawSlice(z,sliceHeight,posCloser->sliceNo);
+		drawSlice(z,sliceHeight,castInfoCloser->sliceNo,castInfoCloser->textureNumber);
 	}
 
 	SDL_RenderPresent(render);
 }
 
-void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo){
+void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo,int textureNo){
 
 	int center = resY / 2;
-
 
 	SDL_Rect src,dst;
 	src.x=0+sliceNo;
@@ -119,48 +124,11 @@ void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo){
 	dst.y=center-height;
 	dst.w=1;
 	dst.h=height*2;
-	SDL_Texture *texture = textures->getTexture(1);
+	SDL_Texture *texture = textures->getTexture(textureNo);
 	SDL_RenderCopy(render, texture, &src, &dst);
-
-	//SDL_RenderDrawLine(render,which,center-height,which,center+height);
 }
 
 
-void RayCaster::RenderEngine::debugDrawFrame(){
-	SDL_SetRenderDrawColor(render,0,0,0,0);
-	SDL_RenderClear(render);
-	ObjectPosition pos;
-	pos.x = 256;
-	pos.y = 256;
-
-	double i = 0;
-	ObjectPosition posOutH;
-	ObjectPosition posOutV;
-	ObjectPosition *posCloser;
-	double angle = player->getPlayerAngle();
-	for (i=angle-halfFov;i<angle+halfFov;i+=angleBetweenRays)
-	{
-		pos.angle = i;
-
-
-
-		posOutH = castRayHorizontally(pos);
-		posOutV = castRayVeritically(pos);
-		if (posOutH.distance < posOutV.distance)
-		{
-			SDL_SetRenderDrawColor(render,0,255,0,0);
-			posCloser = &posOutH;
-		}
-		else
-		{
-			SDL_SetRenderDrawColor(render,255,0,0,0);
-			posCloser = &posOutV;
-		}
-		;
-		SDL_RenderDrawLine(render,pos.x,pos.y,posCloser->x,posCloser->y);
-	}
-	SDL_RenderPresent(render);
-}
 
 RayCaster::RenderEngine::~RenderEngine() {
 	logger << log4cpp::Priority::DEBUG << "Class destructor";
@@ -170,7 +138,7 @@ RayCaster::RenderEngine::~RenderEngine() {
 
 
 // its ok
-ObjectPosition RayCaster::RenderEngine::castRayHorizontally(ObjectPosition pos)
+void RayCaster::RenderEngine::castRayHorizontally(ObjectPosition pos,CastInfo &castInfo)
 {
 
 
@@ -228,23 +196,21 @@ ObjectPosition RayCaster::RenderEngine::castRayHorizontally(ObjectPosition pos)
 			deltaXa = -(deltaYa * tan(angle));
 		}
 		// faster
-		static wallPositionDetails detail;
-		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,&detail))
+
+		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,castInfo))
 		{
-			pos.sliceNo = (pos.x + deltaXa) % mapBlockSize;
+			castInfo.sliceNo = (pos.x + deltaXa) % mapBlockSize;
 			//cout << "sliceH:" << pos.sliceNo << endl;
 			break;
 		}
 
 	}
-	pos.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
-	pos.x = pos.x + deltaXa;
-	pos.y = pos.y + deltaYa;
-	return pos;
+	castInfo.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
 }
 
+
 // its not ok
-ObjectPosition RayCaster::RenderEngine::castRayVeritically(ObjectPosition pos)
+void RayCaster::RenderEngine::castRayVeritically(ObjectPosition pos,CastInfo &castInfo)
 {
 	// we should normalize angle
 	double angle =  pos.angle;
@@ -304,17 +270,12 @@ ObjectPosition RayCaster::RenderEngine::castRayVeritically(ObjectPosition pos)
 
 			}
 			// faster
-			static wallPositionDetails detail;
-			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,&detail))
+			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,castInfo))
 			{
-				pos.sliceNo = (pos.y + deltaYa) % mapBlockSize;
+				castInfo.sliceNo = (pos.y + deltaYa) % mapBlockSize;
 				//cout << "sliceV:" << pos.sliceNo << endl;
 				break;
 			}
 		}
-	    pos.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
-		pos.x = pos.x + deltaXa;
-		pos.y = pos.y + deltaYa;
-
-	return pos;
+		castInfo.distance = sqrt((deltaXa*deltaXa) + (deltaYa*deltaYa));
 }

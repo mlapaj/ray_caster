@@ -21,17 +21,27 @@ Game::Game() {
 void Game::mainLoop() {
 	 SDL_Event e;
 
-
-	 while ((!hasEnded) && SDL_WaitEvent(&e))
+	 while (!hasEnded)
 	 {
-		 renderEngine->drawFrame();
-		 if (e.type == SDL_QUIT){
-			 hasEnded = true;
-		 }
-		 if (e.type == SDL_KEYDOWN)
+		 while  (SDL_PollEvent(&e))
 		 {
-			 keyboardInput->reactOnKey(e.key.keysym.sym);
+			 if (e.type == SDL_QUIT){
+				 hasEnded = true;
+			 }
+			 if (e.type == SDL_KEYDOWN)
+			 {
+				 keyboardInput->reactOnKeyDown(e.key.keysym.sym);
+			 }
+			 if (e.type == SDL_KEYUP)
+			 {
+				 keyboardInput->reactOnKeyUp(e.key.keysym.sym);
+			 }
+
 		 }
+		 renderEngine->drawFrame();
+		 keyboardInput->action();
+		 SDL_Delay(20);
+
 	 }
 
 }

@@ -22,8 +22,8 @@ void Player::setPlayerPos(int PosX,int PosY,double angle) {
 	this->PosOnMapY = PosY;
 	this->angle = angle;
 
-	toDiffX= sin(angle);
-	toDiffY= -cos(angle);
+	toDiffX= 6*(sin(angle));
+	toDiffY= 6*(-cos(angle));
 }
 
 int Player::getPlayerPosX() {
@@ -41,14 +41,14 @@ double Player::getPlayerAngle() {
 
 
 void Player::moveForward(){
-	PosOnMapX += toDiffX *3;
-	PosOnMapY += toDiffY *3;
+	PosOnMapX += toDiffX;
+	PosOnMapY += toDiffY;
 
 }
 
 void Player::moveBackward(){
-	PosOnMapX -= toDiffX *3;
-	PosOnMapY -= toDiffY *3;
+	PosOnMapX -= toDiffX;
+	PosOnMapY -= toDiffY;
 }
 
 void Player::turnLeft(){
@@ -56,8 +56,8 @@ void Player::turnLeft(){
 	if (angle <= -2 * M_PI){
 		angle = 0;
 	}
-	toDiffX= sin(angle);
-	toDiffY= -cos(angle);
+	toDiffX= 6*(sin(angle));
+	toDiffY= 6*(-cos(angle));
 }
 
 void Player::turnRight(){
@@ -65,8 +65,8 @@ void Player::turnRight(){
 	 if (angle >= 2 * M_PI){
 		 angle = 0;
 	 }
-	 toDiffX= sin(angle);
-	 toDiffY= -cos(angle);
+	 toDiffX= 6*(sin(angle));
+	 toDiffY= 6*(-cos(angle));;
 }
 
 

@@ -26,14 +26,12 @@ namespace RayCaster
 	class RenderEngine {
 	public:
 		int debugRow = 1;
-
-
 		RenderEngine(int resX,int resY,int fov,shared_ptr<RayCaster::Map> rMap,shared_ptr<Player> player);
 		void drawFrame();
-		void drawSlice(int which,int height,int sliceNo);
-		void debugDrawFrame();
+		void drawSlice(int which,int height,int sliceNo,int textureNo);
 		virtual ~RenderEngine();
 	private:
+		SDL_Rect src,dst;
 		shared_ptr<Player> player;
 		log4cpp::Category& logger = log4cpp::Category::getInstance("RenderEngine");
 		int mapBlockSize;
@@ -47,8 +45,8 @@ namespace RayCaster
 		double halfFov;
 		double angleBetweenRays; // in radians
 		shared_ptr<RayCaster::Map> oMap;
-		ObjectPosition castRayHorizontally(ObjectPosition pos);
-		ObjectPosition castRayVeritically(ObjectPosition pos);
+		void castRayHorizontally(ObjectPosition pos,CastInfo &castInfo);
+		void castRayVeritically(ObjectPosition pos,CastInfo &castInfo);
 		shared_ptr<RayCaster::Textures> textures;
 	};
 }
