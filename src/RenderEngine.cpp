@@ -16,7 +16,7 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 	 this->player = player;
 	 logger << log4cpp::Priority::DEBUG << "Class constructor";
 	 //Create windowqqqq
-	 window = SDL_CreateWindow( "SDL Tutorial", 00, 00, resX, resY, SDL_WINDOW_FULLSCREEN); //  // // SDL_WINDOW_SHOWN
+	 window = SDL_CreateWindow( "SDL Tutorial", 00, 00, resX, resY,SDL_WINDOW_SHOWN); //  // //  SDL_WINDOW_FULLSCREEN
 	 if( window == NULL )
 	 {
 		 printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -67,8 +67,23 @@ void RayCaster::RenderEngine::drawFrame(){
 	static CastInfo *castInfoCloser;
 
 
+
 	SDL_SetRenderDrawColor(render,128,128,128,0);
-	SDL_RenderClear(render);
+	SDL_Rect up,down;
+   	up.x = 0;
+   	up.y = 0;
+   	up.w = resX;
+   	up.h = resY/2;
+   	down.x = 0;
+   	down.y = resY/2;
+   	down.w = resX;
+   	down.h = resY/2;
+
+   	SDL_SetRenderDrawColor(render,128,128,128,0);
+	SDL_RenderFillRect(render,&up);
+	SDL_SetRenderDrawColor(render,64,64,64,0);
+	SDL_RenderFillRect(render,&down);
+
 	ObjectPosition pos;
 	pos.x = player->getPlayerPosX(); // + diffX;
 	pos.y = player->getPlayerPosY(); // + diffY;
