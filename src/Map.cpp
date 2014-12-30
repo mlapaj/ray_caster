@@ -40,7 +40,20 @@ RayCaster::Map::Map(string fileName){
 		{
 			for (int j=0;j<height;j++)
 			{
-				mapa >> mapData[i][j];
+				int data;
+				mapa >> data;
+				if (data<100)
+				{
+					mapData[i][j] = data;
+				}
+				else if (data>=100)
+				{
+					pair<int,shared_ptr<Object>> p;
+					p.first = i*width+j;
+					logger << log4cpp::Priority::DEBUG << "Creating item " << p.first;
+					p.second.reset(new Object());
+					itemData.insert(p);
+				}
 			}
 		}
 		mapa.close();
@@ -87,7 +100,7 @@ int RayCaster::Map::getHeight(){
 }
 
 int RayCaster::Map::getWidth(){
-	return heightInBlocks * blockSize;
+	return widthInBlocks * blockSize;
 }
 
 
@@ -127,8 +140,20 @@ bool RayCaster::Map::isWallOnPosition(long x,long y,CastInfo &details)
 	if ((cordX<0) || (cordX>=widthInBlocks)){ retVal = true;}
 	else if ((cordY<0) || (cordY>=heightInBlocks)){ retVal = true;}
 	else if (MapData[cordX][cordY] != 0){
-		retVal = true;
-		details.textureNumber = MapData[cordX][cordY];
+		// wall has number 0-100
+		if (MapData[cordX][cordY]<100)
+		{
+			retVal = true;
+			details.textureNumber = MapData[cordX][cordY];
+		}
+	}
+	else
+	{
+		auto it = itemData.find(cordX*widthInBlocks+cordY);
+		if (it != itemData.end())
+		{
+		    details.objects.insert(it->second);
+		}
 	}
 	return retVal;
 }

@@ -82,6 +82,7 @@ void KeyboardInput::reactOnKeyUp(SDL_Keycode &code) {
 }
 
 
+
 void KeyboardInput::action(){
 	if (moveForward) game.player->moveForward();
 	if (moveBackward) game.player->moveBackward();

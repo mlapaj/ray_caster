@@ -30,9 +30,11 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 			 	SDL_Quit();
 			 	return;
 			 }
+		  Object::setRender(render);
 
 	 }
 	textures.reset(new Textures(render));
+	Object::setTextures(textures);
 
 	this->resX = resX;
 	this->resY = resY;
@@ -63,7 +65,9 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 
 void RayCaster::RenderEngine::drawFrame(){
 	static CastInfo castInfoV;
+	castInfoV.objects.clear();
 	static CastInfo castInfoH;
+	castInfoH.objects.clear();
 	static CastInfo *castInfoCloser;
 
 
@@ -121,6 +125,12 @@ void RayCaster::RenderEngine::drawFrame(){
 
 		drawSlice(z,sliceHeight,castInfoCloser->sliceNo,castInfoCloser->textureNumber);
 	}
+
+	for (auto x:castInfoCloser->objects)
+	{
+		x->show();
+	}
+
 	SDL_RenderPresent(render);
 }
 
@@ -147,6 +157,8 @@ void RayCaster::RenderEngine::drawSlice(int which,int height,int sliceNo,int tex
 RayCaster::RenderEngine::~RenderEngine() {
 	logger << log4cpp::Priority::DEBUG << "Class destructor";
 	//Destroy window
+	Object::setRender( nullptr);
+	Object::setTextures(nullptr);
 	SDL_DestroyWindow( window );
 }
 

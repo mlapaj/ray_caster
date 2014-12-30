@@ -20,6 +20,7 @@
 #include "log4cpp/Priority.hh"
 
 #include "Map.h"
+#include "ObjectPositon.h"
 
 using namespace std;
 

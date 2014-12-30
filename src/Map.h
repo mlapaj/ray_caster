@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "log4cpp/Category.hh"
 #include "log4cpp/Appender.hh"
@@ -20,6 +21,8 @@
 #include "log4cpp/BasicLayout.hh"
 #include "log4cpp/Priority.hh"
 
+
+#include "Object.h"
 #include "ObjectPositon.h"
 #include "CastInfo.h"
 using namespace std;
@@ -57,6 +60,7 @@ namespace RayCaster
 		const int blockSize = 64;
 		struct ObjectPosition defaultPlayerPos;
 		vector<vector<int> > MapData;
+		map<int,shared_ptr<Object>> itemData;
 	};
 }
 #endif /* MAP_H_ */

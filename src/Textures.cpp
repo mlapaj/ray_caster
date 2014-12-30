@@ -28,9 +28,16 @@ Textures::Textures(SDL_Renderer *render) {
 			string fileName;
 			tekstury >> i;
 			tekstury >> fileName;
-			cout << "loaded [" << i << "]: " << fileName << endl;
+			logger << log4cpp::Priority::DEBUG << "loaded [" << i << "]: " << fileName;
 			SDL_Surface *tmpSurf = SDL_LoadBMP((textureDirectory + fileName).c_str());
+			// transparent texture
+			if (i>=100)
+			{
+				Uint32 colorkey = SDL_MapRGB( tmpSurf->format, 152, 0x0, 136 );
+				SDL_SetColorKey( tmpSurf, SDL_TRUE, colorkey );
+			}
 			SDL_Texture *tmpTex = SDL_CreateTextureFromSurface(this->render, tmpSurf);
+
 			surf.first = i;
 			surf.second = tmpSurf;
 			tex.first = i;

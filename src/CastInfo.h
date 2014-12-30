@@ -8,10 +8,17 @@
 #ifndef CASTINFO_H_
 #define CASTINFO_H_
 
+#include <set>
+#include <memory>
+
+#include "Object.h"
+using namespace std;
+
 namespace RayCaster {
 
 class CastInfo {
 public:
+	set<shared_ptr<Object> > objects;
 	double distance;
 	int sliceNo;
 	int textureNumber;

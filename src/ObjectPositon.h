@@ -12,8 +12,6 @@ struct ObjectPosition{
 	int x;
 	int y;
 	double angle;
-	long distance;
-	int sliceNo;
 };
 
 
