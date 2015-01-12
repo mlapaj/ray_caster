@@ -93,6 +93,7 @@ void RayCaster::RenderEngine::drawFrame(){
 	pos.y = player->getPlayerPosY(); // + diffY;
 
 	double angle = player->getPlayerAngle();
+	double tanAngle = tan(angle);
 	double i = angle;
 
 	int z=0;
@@ -129,6 +130,33 @@ void RayCaster::RenderEngine::drawFrame(){
 	for (auto x:castInfoCloser->objects)
 	{
 		x->show();
+		int playerX = player->getPlayerPosX();
+		int playerY = player->getPlayerPosY();
+		logger << log4cpp::Priority::DEBUG << "PlayerX: " << playerX << " Y: " << playerY;
+		logger << log4cpp::Priority::DEBUG << "X: " << x->x << " Y: " << x->y;
+		/// set player to 0,0 and x to new coordinates
+		int newPlayerX = playerX - playerX;
+		int newPlayerY = playerY - playerY;
+		int newObjX = x->x - playerX;
+		int newObjY = x->y - playerY;
+		logger << log4cpp::Priority::DEBUG << "newPlayerX: " << newPlayerX << " Y: " << newPlayerY;
+		logger << log4cpp::Priority::DEBUG << "newX: " << newObjX << " Y: " << newObjY;
+		// create "ray"
+
+		double rayYa = -mapBlockSize;
+		double rayXa = -(rayYa * tanAngle);
+
+		logger << log4cpp::Priority::DEBUG << "newRay X: " << rayXa << " Y: " << rayYa;
+		//logger << log4cpp::Priority::DEBUG << "kat:" << atan(rayXa/rayYa) * 180 / M_PI;
+		double lenObj = sqrt(newObjX*newObjX + newObjY*newObjY);
+		double lenRay = sqrt(rayXa*rayXa + rayYa*rayYa);
+		logger << log4cpp::Priority::DEBUG << "lenObj: " << lenObj << "lenRay: " << lenRay;
+		double kat = (newObjX * rayXa + newObjY*rayYa) / (lenObj * lenRay)  ;
+		logger << log4cpp::Priority::DEBUG << "kat1:" << acos(kat) * 180 / M_PI << "katAngle:" << angle * 180 / M_PI;
+
+
+
+
 	}
 
 	SDL_RenderPresent(render);

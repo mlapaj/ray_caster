@@ -34,6 +34,7 @@ private:
 	static shared_ptr<Textures> textures;
 	log4cpp::Category& logger = log4cpp::Category::getInstance("Object");
 public:
+	int x,y;
 	static void setRender(SDL_Renderer *render);
 	static void setTextures(shared_ptr<Textures> textures);
 	Object();
