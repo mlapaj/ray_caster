@@ -52,8 +52,8 @@ RayCaster::Map::Map(string fileName){
 					p.first = i*width+j;
 					logger << log4cpp::Priority::DEBUG << "Creating item " << p.first;
 					p.second.reset(new Object());
-					p.second->x = i*blockSize;
-					p.second->y = j*blockSize;
+					p.second->x = i*blockSize + blockSize/2;
+					p.second->y = j*blockSize + blockSize/2;
 					itemData.insert(p);
 				}
 			}

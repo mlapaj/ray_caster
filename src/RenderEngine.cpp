@@ -139,21 +139,35 @@ void RayCaster::RenderEngine::drawFrame(){
 		int newPlayerY = playerY - playerY;
 		int newObjX = x->x - playerX;
 		int newObjY = x->y - playerY;
-		logger << log4cpp::Priority::DEBUG << "newPlayerX: " << newPlayerX << " Y: " << newPlayerY;
-		logger << log4cpp::Priority::DEBUG << "newX: " << newObjX << " Y: " << newObjY;
+		//logger << log4cpp::Priority::DEBUG << "newPlayerX: " << newPlayerX << " Y: " << newPlayerY;
+		//logger << log4cpp::Priority::DEBUG << "newX: " << newObjX << " Y: " << newObjY;
 		// create "ray"
+		double rayYa;
+		double rayXa;
 
-		double rayYa = -mapBlockSize;
-		double rayXa = -(rayYa * tanAngle);
 
-		logger << log4cpp::Priority::DEBUG << "newRay X: " << rayXa << " Y: " << rayYa;
+		double angleDeg = angle * 180 / M_PI;
+		double kat = ((atan2(newObjY,newObjX) - angle) * 180 / M_PI) + 90;
+		if (kat < -270)
+		{
+			kat = 365 + kat;
+		}
+		else if (kat > 270)
+		{
+			kat = 365 - kat;
+		}
+
+		logger << log4cpp::Priority::DEBUG  << "kat X: " <<  kat;
+
+/*
+		logger << log4cpp::Priority::DEBUG  << "newRay X: " << rayXa << " Y: " << rayYa;
 		//logger << log4cpp::Priority::DEBUG << "kat:" << atan(rayXa/rayYa) * 180 / M_PI;
 		double lenObj = sqrt(newObjX*newObjX + newObjY*newObjY);
 		double lenRay = sqrt(rayXa*rayXa + rayYa*rayYa);
 		logger << log4cpp::Priority::DEBUG << "lenObj: " << lenObj << "lenRay: " << lenRay;
 		double kat = (newObjX * rayXa + newObjY*rayYa) / (lenObj * lenRay)  ;
 		logger << log4cpp::Priority::DEBUG << "kat1:" << acos(kat) * 180 / M_PI << "katAngle:" << angle * 180 / M_PI;
-
+*/
 
 
 
