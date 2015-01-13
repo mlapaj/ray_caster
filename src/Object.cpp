@@ -29,17 +29,18 @@ void Object::setTextures(shared_ptr<Textures> textures){
 	Object::textures = textures;
 }
 
-void Object::show() {
+void Object::show(int where,int height) {
+	int center = 600/2;
 	SDL_Rect src,dst;
 	src.x=0;
 	src.y=0;
 	src.w=64;
 	src.h=64;
 
-	dst.x=0;
-	dst.y=0;
-	dst.w=128;
-	dst.h=128;
+	dst.x=where - 64;
+	dst.y=center-height;
+	dst.w=height*2;
+	dst.h=height*2;
 	SDL_Texture *texture = textures->getTexture(100);
 	SDL_RenderCopy(render, texture, &src, &dst);
 }

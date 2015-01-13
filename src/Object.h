@@ -38,7 +38,7 @@ public:
 	static void setRender(SDL_Renderer *render);
 	static void setTextures(shared_ptr<Textures> textures);
 	Object();
-	void show();
+	void show(int where,int height);
 	virtual ~Object();
 };
 

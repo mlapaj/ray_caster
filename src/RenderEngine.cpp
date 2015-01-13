@@ -129,7 +129,7 @@ void RayCaster::RenderEngine::drawFrame(){
 
 	for (auto x:castInfoCloser->objects)
 	{
-		x->show();
+
 		int playerX = player->getPlayerPosX();
 		int playerY = player->getPlayerPosY();
 		logger << log4cpp::Priority::DEBUG << "PlayerX: " << playerX << " Y: " << playerY;
@@ -159,13 +159,31 @@ void RayCaster::RenderEngine::drawFrame(){
 
 		logger << log4cpp::Priority::DEBUG  << "kat X: " <<  kat;
 
+		double fovDeg = fov * 180 / M_PI;
+		double where = 0;
+		if ((angleDeg > -90) && (angleDeg < 360))
+		{
+			where = resX - abs((((kat - fovDeg/2)) / fovDeg) * resX);
+		}
+		else
+		{
+			where = abs((((kat - fovDeg/2)) / fovDeg) * resX);
+		}
+
+		double distanceToSlice = sqrt(newObjX*newObjX + newObjY*newObjY);
+		// slice height = actual slice height / distance to slice * distance to projection plane
+
+		// something wrong with height is !!!!!!!!!!
+		double objectHeight = ((oMap->getMapBlockSize()/2) / distanceToSlice ) * dToProjectionPlane;
+		x->show(where,objectHeight);
+		//logger << log4cpp::Priority::DEBUG << "where:" << where << "where:" << where;
+		//logger << log4cpp::Priority::DEBUG << "kat1:" << angle * 180 / M_PI;
 /*
 		logger << log4cpp::Priority::DEBUG  << "newRay X: " << rayXa << " Y: " << rayYa;
 		//logger << log4cpp::Priority::DEBUG << "kat:" << atan(rayXa/rayYa) * 180 / M_PI;
 		double lenObj = sqrt(newObjX*newObjX + newObjY*newObjY);
 		double lenRay = sqrt(rayXa*rayXa + rayYa*rayYa);
 		logger << log4cpp::Priority::DEBUG << "lenObj: " << lenObj << "lenRay: " << lenRay;
-		double kat = (newObjX * rayXa + newObjY*rayYa) / (lenObj * lenRay)  ;
 		logger << log4cpp::Priority::DEBUG << "kat1:" << acos(kat) * 180 / M_PI << "katAngle:" << angle * 180 / M_PI;
 */
 
