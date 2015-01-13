@@ -40,7 +40,7 @@ namespace RayCaster
 		SDL_Window* window = NULL;
 		SDL_Renderer *render;
 		int dToProjectionPlane;
-
+		vector<double> zBuffer;
 		double fov; // in radians
 		double halfFov;
 		double angleBetweenRays; // in radians
