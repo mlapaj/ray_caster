@@ -58,7 +58,8 @@ RayCaster::RenderEngine::RenderEngine(int resX, int resY, int fov, shared_ptr<Ra
 		debugRow = (oMap->getHeight() / oMap->getMapBlockSize()) +1;
 	}
 
-
+	zBuffer.reserve(resX);
+	logger << log4cpp::Priority::DEBUG << resY;
 
 }
 
@@ -99,7 +100,6 @@ void RayCaster::RenderEngine::drawFrame(){
 	int z=0;
 	for (i=angle-halfFov;i<angle+halfFov;i+=angleBetweenRays)
 	{
-		z++;
 		pos.angle = i;
 
 
@@ -120,20 +120,23 @@ void RayCaster::RenderEngine::drawFrame(){
 		double distanceToSlice = 0;
 		// slice height = actual slice height / distance to slice * distance to projection plane
 		distanceToSlice = (double)castInfoCloser->distance * cos(i-angle);
+		zBuffer[z] = distanceToSlice;
+		//logger << log4cpp::Priority::DEBUG << z;
 		// something wrong with height is !!!!!!!!!!
 		double sliceHeight = ((oMap->getMapBlockSize()/2) / distanceToSlice ) * dToProjectionPlane;
-		//cout << "cos z" << (i-debugAngle) * 180 / M_PI << endl;
 
 		drawSlice(z,sliceHeight,castInfoCloser->sliceNo,castInfoCloser->textureNumber);
+		z++;
 	}
 
-	for (auto x:castInfoCloser->objects)
+	for (auto x:castInfoH.objects)
 	{
+
 
 		int playerX = player->getPlayerPosX();
 		int playerY = player->getPlayerPosY();
-		logger << log4cpp::Priority::DEBUG << "PlayerX: " << playerX << " Y: " << playerY;
-		logger << log4cpp::Priority::DEBUG << "X: " << x->x << " Y: " << x->y;
+		//logger << log4cpp::Priority::DEBUG << "PlayerX: " << playerX << " Y: " << playerY;
+		//logger << log4cpp::Priority::DEBUG << "X: " << x->x << " Y: " << x->y;
 		/// set player to 0,0 and x to new coordinates
 		int newPlayerX = playerX - playerX;
 		int newPlayerY = playerY - playerY;
@@ -141,55 +144,39 @@ void RayCaster::RenderEngine::drawFrame(){
 		int newObjY = x->y - playerY;
 		//logger << log4cpp::Priority::DEBUG << "newPlayerX: " << newPlayerX << " Y: " << newPlayerY;
 		//logger << log4cpp::Priority::DEBUG << "newX: " << newObjX << " Y: " << newObjY;
-		// create "ray"
-		double rayYa;
-		double rayXa;
-
 
 		double angleDeg = angle * 180 / M_PI;
-		double kat = ((atan2(newObjY,newObjX) - angle) * 180 / M_PI) + 90;
-		if (kat < -270)
+
+		double angleDeg2 = angleDeg;
+		if (angleDeg2 < -90)
 		{
-			kat = 365 + kat;
-		}
-		else if (kat > 270)
-		{
-			kat = 365 - kat;
+			angleDeg2 = 360 + angleDeg2;
 		}
 
+		double kat = (atan2(newObjY,newObjX) * 180 / M_PI) - angleDeg2 + 90;
+		if (kat < -330) kat = kat + 360;
+
 		logger << log4cpp::Priority::DEBUG  << "kat X: " <<  kat;
+		logger << log4cpp::Priority::DEBUG  << "angle X: " <<  angleDeg2;
+		if ((kat < -30) || (kat > 30)) continue;
+
+
 
 		double fovDeg = fov * 180 / M_PI;
 		double where = 0;
-		if ((angleDeg > -90) && (angleDeg < 360))
-		{
-			where = resX - abs((((kat - fovDeg/2)) / fovDeg) * resX);
-		}
-		else
-		{
-			where = abs((((kat - fovDeg/2)) / fovDeg) * resX);
-		}
 
+		where = resX - abs((((kat - fovDeg/2)) / fovDeg) * resX);
+
+
+		logger << log4cpp::Priority::DEBUG << "angle" << angle * 180 / M_PI;
 		double distanceToSlice = sqrt(newObjX*newObjX + newObjY*newObjY);
-		// slice height = actual slice height / distance to slice * distance to projection plane
 
-		// something wrong with height is !!!!!!!!!!
 		double objectHeight = ((oMap->getMapBlockSize()/2) / distanceToSlice ) * dToProjectionPlane;
-		x->show(where,objectHeight);
-		//logger << log4cpp::Priority::DEBUG << "where:" << where << "where:" << where;
-		//logger << log4cpp::Priority::DEBUG << "kat1:" << angle * 180 / M_PI;
-/*
-		logger << log4cpp::Priority::DEBUG  << "newRay X: " << rayXa << " Y: " << rayYa;
-		//logger << log4cpp::Priority::DEBUG << "kat:" << atan(rayXa/rayYa) * 180 / M_PI;
-		double lenObj = sqrt(newObjX*newObjX + newObjY*newObjY);
-		double lenRay = sqrt(rayXa*rayXa + rayYa*rayYa);
-		logger << log4cpp::Priority::DEBUG << "lenObj: " << lenObj << "lenRay: " << lenRay;
-		logger << log4cpp::Priority::DEBUG << "kat1:" << acos(kat) * 180 / M_PI << "katAngle:" << angle * 180 / M_PI;
-*/
 
-
+		x->show(where,objectHeight,zBuffer,distanceToSlice);
 
 	}
+
 
 	SDL_RenderPresent(render);
 }

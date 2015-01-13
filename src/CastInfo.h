@@ -18,7 +18,7 @@ namespace RayCaster {
 
 class CastInfo {
 public:
-	set<shared_ptr<Object> > objects;
+	static set<shared_ptr<Object> > objects;
 	double distance;
 	int sliceNo;
 	int textureNumber;

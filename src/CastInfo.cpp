@@ -9,6 +9,9 @@
 
 namespace RayCaster {
 
+
+set<shared_ptr<Object> > CastInfo::objects;
+
 CastInfo::CastInfo() {
 	// TODO Auto-generated constructor stub
 
