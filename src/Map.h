@@ -33,11 +33,12 @@ struct wallPositionDetails{
 };
 
 
-class MapLoader;
+class MapGenerator;
 namespace RayCaster
 {
 	class Map {
 	public:
+		Map(){};
 		Map(string fileName);
 		void PrintMap();
 		int getHeight();
@@ -47,7 +48,7 @@ namespace RayCaster
 		bool isWallOnPosition(long x,long dx,long y,long dy,CastInfo &details);
 		int getMapBlockSize();
 		virtual ~Map();
-		friend class MapLoader;
+		friend class MapGenerator;
 		// temporary
 	private:
 		log4cpp::Category& logger = log4cpp::Category::getInstance("Map");

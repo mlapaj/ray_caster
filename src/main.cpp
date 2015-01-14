@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <SDL.h>
+#include "MapGenerator.h"
 #include "Game.h"
 
 
@@ -24,6 +25,7 @@
 
 int main()
 {
+
 	log4cpp::Appender *appender1 = new log4cpp::OstreamAppender("console", &std::cout);
 	appender1->setLayout(new log4cpp::BasicLayout());
 
@@ -33,6 +35,7 @@ int main()
 	log4cpp::Category& root = log4cpp::Category::getRoot();
 	root.setPriority(log4cpp::Priority::DEBUG);
 	root.addAppender(appender1);
+
 
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{

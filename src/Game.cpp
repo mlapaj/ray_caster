@@ -11,7 +11,8 @@ namespace RayCaster {
 
 Game::Game() {
 	logger << log4cpp::Priority::DEBUG << "Class constructor";
-    currentMap.reset(new Map("level1.map"));
+    //currentMap.reset(new Map("level1.map"));
+	currentMap.reset(MapGenerator::GenerateMap(100));
     player.reset(new Player(currentMap));
     player->setPlayerPos(255,255,0);
     renderEngine.reset(new RenderEngine(screenWidth,screenHeight,screenFov,currentMap,player));
