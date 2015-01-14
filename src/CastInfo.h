@@ -18,7 +18,7 @@ namespace RayCaster {
 
 class CastInfo {
 public:
-	static set<shared_ptr<Object> > objects;
+	static set<shared_ptr<Object>, Object::compare > objects;
 	double distance;
 	int sliceNo;
 	int textureNumber;

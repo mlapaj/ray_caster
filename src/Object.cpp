@@ -71,6 +71,10 @@ void Object::show(int where,int height,vector<double> &zBuffer,double distance) 
 */
 }
 
+void Object::setDistanceToPlayer(int distance){
+	distanceToPlayer = distance;
+}
+
 Object::~Object() {
 	logger << log4cpp::Priority::DEBUG << "Class destroy";
 }

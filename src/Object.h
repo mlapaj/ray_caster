@@ -34,12 +34,28 @@ private:
 	static shared_ptr<Textures> textures;
 	log4cpp::Category& logger = log4cpp::Category::getInstance("Object");
 public:
+	int distanceToPlayer;
 	int x,y;
 	static void setRender(SDL_Renderer *render);
 	static void setTextures(shared_ptr<Textures> textures);
 	Object();
 	void show(int where,int height,vector<double> &zBuffer,double distance);
 	virtual ~Object();
+	void setDistanceToPlayer(int distance);
+    struct compare{
+	bool operator()(const Object* a, const Object* b) {
+         if (a->distanceToPlayer != b->distanceToPlayer) return a->distanceToPlayer > b->distanceToPlayer;
+         return a->distanceToPlayer < b->distanceToPlayer;
+	}
+
+	bool operator()(const shared_ptr<RayCaster::Object> &a, const shared_ptr<RayCaster::Object> &b) {
+	         if (a->distanceToPlayer != b->distanceToPlayer) return a->distanceToPlayer > b->distanceToPlayer;
+	         return a->distanceToPlayer < b->distanceToPlayer;
+			return 0;
+		}
+
+    };
+
 };
 
 } /* namespace RayCaster */

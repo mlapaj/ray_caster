@@ -44,7 +44,7 @@ namespace RayCaster
 		int getWidth();
 		ObjectPosition getDefaultPlayerPos();
 		bool isWallOnPosition(long x,long y);
-		bool isWallOnPosition(long x,long y,CastInfo &details);
+		bool isWallOnPosition(long x,long dx,long y,long dy,CastInfo &details);
 		int getMapBlockSize();
 		virtual ~Map();
 		friend class MapLoader;

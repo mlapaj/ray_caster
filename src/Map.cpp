@@ -133,11 +133,11 @@ bool RayCaster::Map::isWallOnPosition(long x,long y)
 	return retVal;
 }
 
-bool RayCaster::Map::isWallOnPosition(long x,long y,CastInfo &details)
+bool RayCaster::Map::isWallOnPosition(long x,long dx,long y,long dy,CastInfo &details)
 {
 	bool retVal = false;
-	long cordX = x/blockSize;
-	long cordY = y/blockSize;
+	long cordX = (x+dx)/blockSize;
+	long cordY = (y+dy)/blockSize;
 
 	if ((cordX<0) || (cordX>=widthInBlocks)){ retVal = true;}
 	else if ((cordY<0) || (cordY>=heightInBlocks)){ retVal = true;}
@@ -147,6 +147,7 @@ bool RayCaster::Map::isWallOnPosition(long x,long y,CastInfo &details)
 		{
 			retVal = true;
 			details.textureNumber = MapData[cordX][cordY];
+			details.distance = sqrt((dx*dx) + (dy*dy));
 		}
 	}
 	else
@@ -154,7 +155,9 @@ bool RayCaster::Map::isWallOnPosition(long x,long y,CastInfo &details)
 		auto it = itemData.find(cordX*widthInBlocks+cordY);
 		if (it != itemData.end())
 		{
-		    details.objects.insert(it->second);
+			it->second->setDistanceToPlayer(sqrt((dx*dx) + (dy*dy)));
+			details.objects.insert(it->second);
+
 		}
 	}
 	return retVal;

@@ -129,7 +129,7 @@ void RayCaster::RenderEngine::drawFrame(){
 		z++;
 	}
 
-	for (auto x:castInfoH.objects)
+	for (auto x:castInfoCloser->objects)
 	{
 
 
@@ -270,7 +270,7 @@ void RayCaster::RenderEngine::castRayHorizontally(ObjectPosition pos,CastInfo &c
 		}
 		// faster
 
-		if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,castInfo))
+		if (oMap->isWallOnPosition(pos.x,deltaXa,pos.y,deltaYa,castInfo))
 		{
 			castInfo.sliceNo = (pos.x + deltaXa) % mapBlockSize;
 			//cout << "sliceH:" << pos.sliceNo << endl;
@@ -343,7 +343,7 @@ void RayCaster::RenderEngine::castRayVeritically(ObjectPosition pos,CastInfo &ca
 
 			}
 			// faster
-			if (oMap->isWallOnPosition(pos.x + deltaXa,pos.y + deltaYa,castInfo))
+			if (oMap->isWallOnPosition(pos.x,deltaXa,pos.y,deltaYa,castInfo))
 			{
 				castInfo.sliceNo = (pos.y + deltaYa) % mapBlockSize;
 				//cout << "sliceV:" << pos.sliceNo << endl;
